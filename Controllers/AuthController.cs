@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SportsCentre.API.Data;
+using SportsCentre.API.Dtos;
 using SportsCentre.API.Models;
 
 namespace SportsCentre.API.Controllers
@@ -16,19 +17,19 @@ namespace SportsCentre.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(string email, string password)
+        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
-            email = email.ToLower();
+            userForRegisterDto.Email = userForRegisterDto.Email.ToLower();
 
-            if (await repo.UserExists(email)) 
+            if (await repo.UserExists(userForRegisterDto.Email)) 
                 return BadRequest("Email Already In Use");
 
             User userToCreate = new User
             {
-                Email = email
+                Email = userForRegisterDto.Email
             };
 
-            User createdUser = await repo.Register(userToCreate, password);
+            User createdUser = await repo.Register(userToCreate, userForRegisterDto.Password);
 
             return StatusCode(201);
         }
