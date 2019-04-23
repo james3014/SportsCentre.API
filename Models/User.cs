@@ -8,5 +8,16 @@ namespace SportsCentre.API.Models
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+        public string FirstName { get; set; }
+        public string Surname { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string Town { get; set; }
+        public string PostCode { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string MembershipType { get; set; }
+        public DateTime MembershipExpiry { get; set; }
+        public Booking[] Bookings { get; set; }
+        public Payment[] Payments { get; set; }
     }
 }

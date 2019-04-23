@@ -16,14 +16,20 @@ namespace SportsCentre.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        // Private variables
         private readonly IAuthRepository repo;
         private readonly IConfiguration config;
+
+
+        // Constructor
         public AuthController(IAuthRepository repo, IConfiguration config)
         {
             this.config = config;
             this.repo = repo;
         }
 
+
+        // Register controller route
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
@@ -42,6 +48,7 @@ namespace SportsCentre.API.Controllers
             return StatusCode(201);
         }
 
+
         /**
             This route takes in a JSON "UserForLoginDto" which provides an email and password.
             If this is not null then a new claim is created which will provide our JWT with an
@@ -58,24 +65,27 @@ namespace SportsCentre.API.Controllers
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.Email)
+                new Claim(ClaimTypes.Email, userFromRepo.Email),
+                new Claim(ClaimTypes.Name, userFromRepo.FirstName)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("AppSettings:Token").Value));
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("AppSettings:Token").Value));
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var token = new JwtSecurityToken
-            (
-                issuer: "localhost",
-                audience: "localhost",
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds
-            );
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
 
-            return Ok(new {token = new JwtSecurityTokenHandler().WriteToken(token)});
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return Ok(new {token = tokenHandler.WriteToken(token)});
+
         }
     }
 }
