@@ -35,15 +35,21 @@ namespace SportsCentre.API.Controllers
         {
             userForRegisterDto.Email = userForRegisterDto.Email.ToLower();
 
-            if (await repo.UserExists(userForRegisterDto.Email))
-                return BadRequest("Email Already In Use");
+            if (await repo.UserExists(userForRegisterDto.Email)) return BadRequest("Email Already In Use");
 
-            User userToCreate = new User
+            User newUser = new User
             {
-                Email = userForRegisterDto.Email
+                Email = userForRegisterDto.Email,
+                FirstName = userForRegisterDto.FirstName,
+                Surname = userForRegisterDto.Surname,
+                AddressLine1 = userForRegisterDto.AddressLine1,
+                AddressLine2 = userForRegisterDto.AddressLine2,
+                Town = userForRegisterDto.Town,
+                PostCode = userForRegisterDto.PostCode,
+                DateOfBirth = userForRegisterDto.DateOfBirth
             };
 
-            User createdUser = await repo.Register(userToCreate, userForRegisterDto.Password);
+            User createdUser = await repo.Register(newUser, userForRegisterDto.Password);
 
             return StatusCode(201);
         }
