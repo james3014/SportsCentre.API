@@ -2,7 +2,7 @@ using System;
 
 namespace SportsCentre.API.Models
 {
-    public class User
+    public class Staff
     {
         public int Id { get; set; }
         public string Email { get; set; }
@@ -15,10 +15,8 @@ namespace SportsCentre.API.Models
         public string Town { get; set; }
         public string PostCode { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public string MembershipType { get; set; }
-        public DateTime MembershipExpiry { get; set; }
-        public Booking[] Bookings { get; set; }
-        public Payment[] Payments { get; set; }
-        public Order[] Orders { get; set; }
+        public DateTime HireDate { get; set; }
+        public string Role { get; set; }
+        public Class[] Classes { get; set; }
     }
 }
