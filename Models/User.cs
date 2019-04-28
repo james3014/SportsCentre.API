@@ -15,6 +15,7 @@ namespace SportsCentre.API.Models
         public string Town { get; set; }
         public string PostCode { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public DateTime DateJoined { get; set; }
         public string MembershipType { get; set; }
         public DateTime MembershipExpiry { get; set; }
         public Booking[] Bookings { get; set; }
