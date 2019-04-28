@@ -7,6 +7,7 @@ namespace SportsCentre.API.Data
     {
          Task<User> Register(User user, string password);
          Task<User> Login(string email, string password);
+         Task<Staff> StaffLogin(string email, string password);
          Task<bool> UserExists(string email);
     }
 }

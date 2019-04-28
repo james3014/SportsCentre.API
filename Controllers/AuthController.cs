@@ -90,7 +90,39 @@ namespace SportsCentre.API.Controllers
 
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new {token = tokenHandler.WriteToken(token)});
+            return Ok(new { token = tokenHandler.WriteToken(token) });
+        }
+
+        [HttpPost("staff")]
+        public async Task<IActionResult> StaffLogin(UserForLoginDto userforLoginDto)
+        {
+            Staff staffFromRepo = await repo.StaffLogin(userforLoginDto.Email, userforLoginDto.Password);
+
+            if (staffFromRepo == null) return Unauthorized();
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Email, staffFromRepo.Email),
+                new Claim(ClaimTypes.Name, staffFromRepo.FirstName),
+                new Claim(ClaimTypes.Role, staffFromRepo.Role)
+            };
+
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("AppSettings:Token").Value));
+
+            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return Ok(new { token = tokenHandler.WriteToken(token) });
 
         }
     }

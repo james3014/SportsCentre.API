@@ -25,6 +25,19 @@ namespace SportsCentre.API.Data
             return user;
         }
 
+        public async Task<Staff> StaffLogin(string email, string password)
+        {
+            Staff staff = await context.Staff.FirstOrDefaultAsync(x => x.Email == email);
+
+            if (staff == null) return null;
+
+            if (!VerifyPasswordHash(password, staff.PasswordHash, staff.PasswordSalt)) return null;
+
+            return staff;
+        }
+
+
+
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
@@ -60,7 +73,7 @@ namespace SportsCentre.API.Data
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }  
+            }
         }
 
         public async Task<bool> UserExists(string email)
