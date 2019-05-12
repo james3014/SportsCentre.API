@@ -39,7 +39,7 @@ namespace SportsCentre.API.Controllers
                 BookingName = booking.BookingName,
                 BookingDate = booking.BookingDate,
                 CreatedBy = booking.CreatedBy,
-                HasBeenPaid = booking.HasBeenPaid,
+                BookingType = booking.BookingType,
                 PaymentDetail = booking.PaymentDetail
             };
 
