@@ -31,6 +31,24 @@ namespace SportsCentre.API.Controllers
         }
 
 
+        [HttpPost("bookings/create")]
+        public async Task<IActionResult> CreateNewBooking(Booking booking)
+        {
+            Booking newBooking =  new Booking
+            {
+                BookingName = booking.BookingName,
+                BookingDate = booking.BookingDate,
+                CreatedBy = booking.CreatedBy,
+                HasBeenPaid = booking.HasBeenPaid,
+                PaymentDetail = booking.PaymentDetail
+            };
+
+            Booking createdBooking = await repo.CreateNewBooking(newBooking);
+
+            return Ok(createdBooking);
+        }
+
+
 
         [HttpPost("createclass")]
         public async Task<IActionResult> CreateNewClass(CreateClassDto createClassDto)

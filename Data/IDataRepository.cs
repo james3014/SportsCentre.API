@@ -7,6 +7,7 @@ namespace SportsCentre.API.Data
 {
     public interface IDataRepository
     {
+        Task<Booking> CreateNewBooking(Booking booking);
         Task<IEnumerable<Booking>> GetBookings();
         Task<Class> GetCurrentClasses();
         Task<Class> CreateNewClass(Class newClass);
