@@ -50,21 +50,7 @@ namespace SportsCentre.API.Controllers
 
 
 
-        [HttpPost("createclass")]
-        public async Task<IActionResult> CreateNewClass(CreateClassDto createClassDto)
-        {
-            Class newClass = new Class
-            {
-                ClassName = createClassDto.ClassName,
-                ClassDate = createClassDto.ClassDate,
-                Attendant = createClassDto.Attendant,
-                Cost = createClassDto.Cost
-            };
 
-            Class createdClass = await repo.CreateNewClass(newClass);
-
-            return Ok(createdClass);
-        }
 
 
         [HttpPost("editclass")]

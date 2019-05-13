@@ -34,32 +34,10 @@ namespace SportsCentre.API.Data
             return booking;
         }
 
-
-        // Classes
-        public async Task<Class> CreateNewClass(Class newClass)
-        {
-            await context.Classes.AddAsync(newClass);
-            await context.SaveChangesAsync();
-
-            return newClass;
-        }
-
-
-        public Task<Class> EditClass()
-        {
-            throw new System.NotImplementedException();
-        }
-
-
         public Task<Class> GetCurrentClasses()
         {
             throw new System.NotImplementedException();
         }
 
-
-        public Task<Class> RemoveClass()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
