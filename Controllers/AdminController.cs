@@ -9,7 +9,7 @@ namespace SportsCentre.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController
+    public class AdminController : ControllerBase
     {
         private readonly IAdminRepository repo;
         private readonly IConfiguration config;
@@ -34,7 +34,21 @@ namespace SportsCentre.API.Controllers
 
             Class createdClass = await repo.CreateNewClass(newClass);
 
-            return StatusCode(createdClass);
+            return StatusCode(201);
         }
-    }
+
+        
+        [HttpPost("editclass")]
+        public Task<IActionResult> EditClass(CreateClassDto editClassDto)
+        {
+            throw new System.Exception();
+        }
+
+
+        [HttpPost("removeclass")]
+        public Task<IActionResult> RemoveClass()
+        {
+            throw new System.Exception();
+        }
+    } 
 }

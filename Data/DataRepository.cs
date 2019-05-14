@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -39,5 +40,24 @@ namespace SportsCentre.API.Data
             throw new System.NotImplementedException();
         }
 
+        public async Task<User> CreateMembership(string plan, string email)
+        {
+            User user = await context.Users.FirstOrDefaultAsync(x => x.Email == email);
+
+            if (user == null) return null;
+
+            if (plan.ToLower().Equals("annual"))
+            {
+                user.MembershipType = "Annual";
+                user.MembershipExpiry = DateTime.Now.AddYears(1);
+            }
+            else
+            {
+                user.MembershipType = "Monthly";
+                user.MembershipExpiry = DateTime.Now.AddMonths(1);
+            }
+
+            return user;
+        }
     }
 }

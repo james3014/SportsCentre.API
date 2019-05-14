@@ -21,6 +21,14 @@ namespace SportsCentre.API.Controllers
             this.config = config;
         }
 
+        [HttpPost("membership/create")]
+        public async Task<IActionResult> CreateMembership(string type, string email)
+        {
+            User user = await repo.CreateMembership(type, email);
+            
+            return Ok(user);
+        }
+
 
         [HttpGet("bookings")]
         public async Task<IActionResult> GetAllBookings()
@@ -46,24 +54,6 @@ namespace SportsCentre.API.Controllers
             Booking createdBooking = await repo.CreateNewBooking(newBooking);
 
             return Ok(createdBooking);
-        }
-
-
-
-
-
-
-        [HttpPost("editclass")]
-        public Task<IActionResult> EditClass(CreateClassDto editClassDto)
-        {
-            throw new System.Exception();
-        }
-
-
-        [HttpPost("removeclass")]
-        public Task<IActionResult> RemoveClass()
-        {
-            throw new System.Exception();
         }
     }
 
