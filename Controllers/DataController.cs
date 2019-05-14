@@ -21,11 +21,19 @@ namespace SportsCentre.API.Controllers
             this.config = config;
         }
 
+        [HttpGet("users/{id}")]
+        public async Task<IActionResult> GetUser(int id)
+        {
+            var user = await repo.GetUser(id);
+
+            return Ok(user);
+        }
+
         [HttpPost("membership/create")]
         public async Task<IActionResult> CreateMembership(string type, string email)
         {
             User user = await repo.CreateMembership(type, email);
-            
+
             return Ok(user);
         }
 
@@ -42,7 +50,7 @@ namespace SportsCentre.API.Controllers
         [HttpPost("bookings/create")]
         public async Task<IActionResult> CreateNewBooking(Booking booking)
         {
-            Booking newBooking =  new Booking
+            Booking newBooking = new Booking
             {
                 BookingName = booking.BookingName,
                 BookingDate = booking.BookingDate,

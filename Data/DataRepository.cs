@@ -35,6 +35,7 @@ namespace SportsCentre.API.Data
             return booking;
         }
 
+        // Classes
         public Task<Class> GetCurrentClasses()
         {
             throw new System.NotImplementedException();
@@ -56,6 +57,15 @@ namespace SportsCentre.API.Data
                 user.MembershipType = "Monthly";
                 user.MembershipExpiry = DateTime.Now.AddMonths(1);
             }
+
+            return user;
+        }
+
+
+         // Users
+        public async Task<User> GetUser(int id)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
             return user;
         }
