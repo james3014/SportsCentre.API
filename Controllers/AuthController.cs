@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -19,12 +20,14 @@ namespace SportsCentre.API.Controllers
         // Private variables
         private readonly IAuthRepository repo;
         private readonly IConfiguration config;
+        private readonly IMapper mapper;
 
 
         // Constructor
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
             this.config = config;
+            this.mapper = mapper;
             this.repo = repo;
         }
 
@@ -90,7 +93,13 @@ namespace SportsCentre.API.Controllers
 
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new { token = tokenHandler.WriteToken(token) });
+            var user = mapper.Map<CurrentUserDto>(userFromRepo);
+
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token),
+                user
+            });
         }
 
         [HttpPost("staff")]
@@ -122,7 +131,13 @@ namespace SportsCentre.API.Controllers
 
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new { token = tokenHandler.WriteToken(token) });
+            var staff = mapper.Map<CurrentUserDto>(staffFromRepo);
+
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token),
+                staff
+            });
 
         }
     }

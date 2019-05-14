@@ -19,6 +19,7 @@ namespace SportsCentre.API.Data
             this.context = context;
         }
 
+
         // Bookings
         public async Task<IEnumerable<Booking>> GetBookings()
         {

@@ -1,3 +1,5 @@
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SportsCentre.API.Data;
@@ -7,26 +9,28 @@ using System.Threading.Tasks;
 
 namespace SportsCentre.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DataController : ControllerBase
     {
         private readonly IDataRepository repo;
-        private readonly IConfiguration config;
+        private readonly IMapper mapper;
 
-
-        public DataController(IDataRepository repo, IConfiguration config)
+        public DataController(IDataRepository repo, IMapper mapper)
         {
             this.repo = repo;
-            this.config = config;
+            this.mapper = mapper;
         }
 
         [HttpGet("users/{id}")]
         public async Task<IActionResult> GetUser(int id)
-        {
+        { 
             var user = await repo.GetUser(id);
 
-            return Ok(user);
+            var userToReturn = mapper.Map<CurrentUserDto>(user);
+
+            return Ok(userToReturn);
         }
 
         [HttpPost("membership/create")]
