@@ -42,13 +42,13 @@ namespace SportsCentre.API.Data
             throw new System.NotImplementedException();
         }
 
-        public async Task<User> CreateMembership(string plan, string email)
+        public async Task<User> CreateMembership(CurrentUserDto currentUserDto)
         {
-            User user = await context.Users.FirstOrDefaultAsync(x => x.Email == email);
+            User user = await context.Users.FirstOrDefaultAsync(x => x.Email == currentUserDto.Email);
 
             if (user == null) return null;
 
-            if (plan.ToLower().Equals("annual"))
+            if (currentUserDto.MembershipType.ToLower().Equals("annual"))
             {
                 user.MembershipType = "Annual";
                 user.MembershipExpiry = DateTime.Now.AddYears(1);

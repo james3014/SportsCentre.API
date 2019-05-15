@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace SportsCentre.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DataController : ControllerBase
@@ -34,9 +33,9 @@ namespace SportsCentre.API.Controllers
         }
 
         [HttpPost("membership/create")]
-        public async Task<IActionResult> CreateMembership(string type, string email)
+        public async Task<IActionResult> CreateMembership(CurrentUserDto currentUserDto)
         {
-            User user = await repo.CreateMembership(type, email);
+            User user = await repo.CreateMembership(currentUserDto);
 
             return Ok(user);
         }
