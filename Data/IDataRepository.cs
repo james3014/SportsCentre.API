@@ -12,5 +12,6 @@ namespace SportsCentre.API.Data
         Task<Booking> CreateNewBooking(Booking booking);
         Task<IEnumerable<Booking>> GetBookings();
         Task<Class> GetCurrentClasses();
+        Task<bool> SaveAll();
     }
 }

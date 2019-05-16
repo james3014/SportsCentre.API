@@ -44,7 +44,7 @@ namespace SportsCentre.API.Data
 
         public async Task<User> CreateMembership(CurrentUserDto currentUserDto)
         {
-            User user = await context.Users.FirstOrDefaultAsync(x => x.Email == currentUserDto.Email);
+            User user = await context.Users.FirstOrDefaultAsync(x => x.Id == currentUserDto.Id);
 
             if (user == null) return null;
 
@@ -69,6 +69,12 @@ namespace SportsCentre.API.Data
             var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
             return user;
+        }
+
+        // Save All Changes
+        public async Task<bool> SaveAll()
+        {
+            return await context.SaveChangesAsync() > 0;
         }
     }
 }

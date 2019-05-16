@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using SportsCentre.API.Data;
 using SportsCentre.API.Dtos;
 using SportsCentre.API.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace SportsCentre.API.Controllers
@@ -37,7 +38,12 @@ namespace SportsCentre.API.Controllers
         {
             User user = await repo.CreateMembership(currentUserDto);
 
-            return Ok(user);
+            if (await repo.SaveAll())
+            {
+                return NoContent();
+            }
+
+           throw new Exception($"Updating user {user.Id} failed on save");
         }
 
 
