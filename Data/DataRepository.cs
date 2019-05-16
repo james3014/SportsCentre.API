@@ -28,12 +28,20 @@ namespace SportsCentre.API.Data
             return bookings;
         }
 
-        public async Task<Booking> CreateNewBooking(Booking booking)
+        public async Task<Booking> CreateNewBooking(BookingDto bookingDto)
         {
-            await context.Bookings.AddAsync(booking);
-            await context.SaveChangesAsync();
+            User user = await context.Users.FirstOrDefaultAsync(x => x.Email == bookingDto.Email);
 
-            return booking;
+            if (user == null) return null;
+
+
+            Booking booking = new Booking
+            {
+                BookingName = bookingDto.BookingName,
+
+                
+            }
+
         }
 
         // Classes

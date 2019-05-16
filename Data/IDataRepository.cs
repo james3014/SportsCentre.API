@@ -9,7 +9,7 @@ namespace SportsCentre.API.Data
     {
         Task<User> GetUser(int id);
         Task<User> CreateMembership(CurrentUserDto currentUserDto);
-        Task<Booking> CreateNewBooking(Booking booking);
+        Task<Booking> CreateNewBooking(BookingDto bookingDto);
         Task<IEnumerable<Booking>> GetBookings();
         Task<Class> GetCurrentClasses();
         Task<bool> SaveAll();
