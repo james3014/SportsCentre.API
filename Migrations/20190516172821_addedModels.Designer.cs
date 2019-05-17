@@ -9,8 +9,8 @@ using SportsCentre.API.Data;
 namespace SportsCentre.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190516165833_UpdatedBookingModel")]
-    partial class UpdatedBookingModel
+    [Migration("20190516172821_addedModels")]
+    partial class addedModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,6 +26,8 @@ namespace SportsCentre.API.Migrations
                     b.Property<DateTime>("BookingDate");
 
                     b.Property<string>("BookingName");
+
+                    b.Property<string>("BookingTime");
 
                     b.Property<string>("BookingType");
 

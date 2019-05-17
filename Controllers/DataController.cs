@@ -56,12 +56,17 @@ namespace SportsCentre.API.Controllers
         }
 
 
-        [HttpPost("bookings/create")]
-        public async Task<IActionResult> CreateNewBooking(BookingDto bookingDto)
+        [HttpPost("bookings/create/{email}")]
+        public async Task<IActionResult> CreateNewBooking(BookingDto bookingDto, string email)
         {
-            Booking booking = await repo.CreateNewBooking(bookingDto);
+            Booking booking = await repo.CreateNewBooking(bookingDto, email);
 
+            if (await repo.SaveAll())
+            {
+                return Ok(booking);
+            }
 
+            throw new Exception($"Failed to create new booking");
         }
     }
 

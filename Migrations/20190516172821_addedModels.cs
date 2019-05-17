@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SportsCentre.API.Migrations
 {
-    public partial class AddedModels : Migration
+    public partial class addedModels : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -62,6 +62,7 @@ namespace SportsCentre.API.Migrations
                     Town = table.Column<string>(nullable: true),
                     PostCode = table.Column<string>(nullable: true),
                     DateOfBirth = table.Column<DateTime>(nullable: false),
+                    DateJoined = table.Column<DateTime>(nullable: false),
                     MembershipType = table.Column<string>(nullable: true),
                     MembershipExpiry = table.Column<DateTime>(nullable: false)
                 },
@@ -80,7 +81,8 @@ namespace SportsCentre.API.Migrations
                     ClassDate = table.Column<DateTime>(nullable: false),
                     MaxAttendees = table.Column<int>(nullable: false),
                     TotalAttendees = table.Column<int>(nullable: false),
-                    AttendantId = table.Column<int>(nullable: true)
+                    AttendantId = table.Column<int>(nullable: true),
+                    Cost = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -173,8 +175,10 @@ namespace SportsCentre.API.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     BookingName = table.Column<string>(nullable: true),
                     BookingDate = table.Column<DateTime>(nullable: false),
+                    BookingTime = table.Column<string>(nullable: true),
                     CreatedById = table.Column<int>(nullable: true),
-                    HasBeenPaid = table.Column<bool>(nullable: false),
+                    BookingType = table.Column<string>(nullable: true),
+                    Requirements = table.Column<string>(nullable: true),
                     PaymentDetailId = table.Column<int>(nullable: true),
                     ClassId = table.Column<int>(nullable: true),
                     ClubId = table.Column<int>(nullable: true)

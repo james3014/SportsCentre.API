@@ -25,6 +25,8 @@ namespace SportsCentre.API.Migrations
 
                     b.Property<string>("BookingName");
 
+                    b.Property<string>("BookingTime");
+
                     b.Property<string>("BookingType");
 
                     b.Property<int?>("ClassId");

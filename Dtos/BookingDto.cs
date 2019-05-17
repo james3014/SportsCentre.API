@@ -11,6 +11,7 @@ namespace SportsCentre.API.Dtos
         public string BookingName { get; set; }
         public DateTime BookingDate { get; set; }
         public string BookingTime { get; set; }
-        public string BookingType { get; set; }
+        public string Facility { get; set; }
+        public string Requirements { get; set; }
     }
 }
