@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SportsCentre.API.Migrations
 {
-    public partial class addedModels : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,6 +20,20 @@ namespace SportsCentre.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clubs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    OrderDate = table.Column<DateTime>(nullable: false),
+                    Total = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,6 +86,28 @@ namespace SportsCentre.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Items",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ItemName = table.Column<string>(nullable: true),
+                    Cost = table.Column<double>(nullable: false),
+                    StockLevel = table.Column<int>(nullable: false),
+                    OrderId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Items_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Classes",
                 columns: table => new
                 {
@@ -91,27 +127,6 @@ namespace SportsCentre.API.Migrations
                         name: "FK_Classes_Staff_AttendantId",
                         column: x => x.AttendantId,
                         principalTable: "Staff",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    OrderDate = table.Column<DateTime>(nullable: false),
-                    Total = table.Column<double>(nullable: false),
-                    UserId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Orders_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -146,40 +161,17 @@ namespace SportsCentre.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Items",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ItemName = table.Column<string>(nullable: true),
-                    Cost = table.Column<double>(nullable: false),
-                    StockLevel = table.Column<int>(nullable: false),
-                    OrderId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Items", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Items_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Bookings",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BookingName = table.Column<string>(nullable: true),
+                    BookingEmail = table.Column<string>(nullable: true),
                     BookingDate = table.Column<DateTime>(nullable: false),
                     BookingTime = table.Column<string>(nullable: true),
                     CreatedById = table.Column<int>(nullable: true),
                     BookingType = table.Column<string>(nullable: true),
                     Requirements = table.Column<string>(nullable: true),
-                    PaymentDetailId = table.Column<int>(nullable: true),
                     ClassId = table.Column<int>(nullable: true),
                     ClubId = table.Column<int>(nullable: true)
                 },
@@ -204,12 +196,6 @@ namespace SportsCentre.API.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Payments_PaymentDetailId",
-                        column: x => x.PaymentDetailId,
-                        principalTable: "Payments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -228,11 +214,6 @@ namespace SportsCentre.API.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_PaymentDetailId",
-                table: "Bookings",
-                column: "PaymentDetailId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Classes_AttendantId",
                 table: "Classes",
                 column: "AttendantId");
@@ -241,11 +222,6 @@ namespace SportsCentre.API.Migrations
                 name: "IX_Items_OrderId",
                 table: "Items",
                 column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_UserId",
-                table: "Orders",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_ClubId",
@@ -267,22 +243,22 @@ namespace SportsCentre.API.Migrations
                 name: "Items");
 
             migrationBuilder.DropTable(
-                name: "Classes");
-
-            migrationBuilder.DropTable(
                 name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Classes");
 
             migrationBuilder.DropTable(
-                name: "Staff");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Clubs");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Staff");
         }
     }
 }

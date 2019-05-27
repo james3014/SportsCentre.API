@@ -28,23 +28,12 @@ namespace SportsCentre.API.Data
             return bookings;
         }
 
-        public async Task<Booking> CreateNewBooking(BookingDto bookingDto, string email)
+        public async Task<Booking> CreateNewBooking(Booking newBooking)
         {
-            User user = await context.Users.FirstOrDefaultAsync(x => x.Email == email);
+            await context.Bookings.AddAsync(newBooking);
+            await context.SaveChangesAsync();
 
-            if (user == null) return null;
-
-            Booking booking = new Booking
-            {
-                BookingName = bookingDto.BookingName,
-                BookingType = bookingDto.Facility,
-                BookingDate = bookingDto.BookingDate,
-                BookingTime = bookingDto.BookingTime,
-                Requirements = bookingDto.Requirements,
-                CreatedBy = user
-            };
-
-            return booking;
+            return newBooking;
         }
 
         // Classes
@@ -78,6 +67,13 @@ namespace SportsCentre.API.Data
         public async Task<User> GetUser(int id)
         {
             var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+            return user;
+        }
+
+        public async Task<User> GetUserFromEmail(string email)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             return user;
         }

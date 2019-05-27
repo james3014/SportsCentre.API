@@ -18,8 +18,6 @@ namespace SportsCentre.API.Models
         public DateTime DateJoined { get; set; }
         public string MembershipType { get; set; }
         public DateTime MembershipExpiry { get; set; }
-        public Booking[] Bookings { get; set; }
-        public Payment[] Payments { get; set; }
-        public Order[] Orders { get; set; }
+
     }
 }

@@ -9,8 +9,8 @@ using SportsCentre.API.Data;
 namespace SportsCentre.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190516172821_addedModels")]
-    partial class addedModels
+    [Migration("20190527191459_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,7 +25,7 @@ namespace SportsCentre.API.Migrations
 
                     b.Property<DateTime>("BookingDate");
 
-                    b.Property<string>("BookingName");
+                    b.Property<string>("BookingEmail");
 
                     b.Property<string>("BookingTime");
 
@@ -37,8 +37,6 @@ namespace SportsCentre.API.Migrations
 
                     b.Property<int?>("CreatedById");
 
-                    b.Property<int?>("PaymentDetailId");
-
                     b.Property<string>("Requirements");
 
                     b.HasKey("Id");
@@ -48,8 +46,6 @@ namespace SportsCentre.API.Migrations
                     b.HasIndex("ClubId");
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("PaymentDetailId");
 
                     b.ToTable("Bookings");
                 });
@@ -123,11 +119,7 @@ namespace SportsCentre.API.Migrations
 
                     b.Property<double>("Total");
 
-                    b.Property<int?>("UserId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -237,12 +229,8 @@ namespace SportsCentre.API.Migrations
                         .HasForeignKey("ClubId");
 
                     b.HasOne("SportsCentre.API.Models.User", "CreatedBy")
-                        .WithMany("Bookings")
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("SportsCentre.API.Models.Payment", "PaymentDetail")
                         .WithMany()
-                        .HasForeignKey("PaymentDetailId");
+                        .HasForeignKey("CreatedById");
                 });
 
             modelBuilder.Entity("SportsCentre.API.Models.Class", b =>
@@ -259,13 +247,6 @@ namespace SportsCentre.API.Migrations
                         .HasForeignKey("OrderId");
                 });
 
-            modelBuilder.Entity("SportsCentre.API.Models.Order", b =>
-                {
-                    b.HasOne("SportsCentre.API.Models.User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("SportsCentre.API.Models.Payment", b =>
                 {
                     b.HasOne("SportsCentre.API.Models.Club")
@@ -273,7 +254,7 @@ namespace SportsCentre.API.Migrations
                         .HasForeignKey("ClubId");
 
                     b.HasOne("SportsCentre.API.Models.User", "PaidBy")
-                        .WithMany("Payments")
+                        .WithMany()
                         .HasForeignKey("PaidById");
                 });
 #pragma warning restore 612, 618
