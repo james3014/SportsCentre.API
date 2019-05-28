@@ -12,12 +12,14 @@ namespace SportsCentre.API.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminRepository repo;
+        private readonly IDataRepository dataRepo;
         private readonly IConfiguration config;
 
-        public AdminController(IAdminRepository repo, IConfiguration config)
+        public AdminController(IAdminRepository repo, IConfiguration config, IDataRepository dataRepo)
         {
             this.repo = repo;
             this.config = config;
+            this.dataRepo = dataRepo;
         }
 
 

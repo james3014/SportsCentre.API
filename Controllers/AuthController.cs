@@ -103,9 +103,9 @@ namespace SportsCentre.API.Controllers
         }
 
         [HttpPost("staff")]
-        public async Task<IActionResult> StaffLogin(UserForLoginDto userforLoginDto)
+        public async Task<IActionResult> StaffLogin(StaffForLoginDto staffForLoginDto)
         {
-            Staff staffFromRepo = await repo.StaffLogin(userforLoginDto.Email, userforLoginDto.Password);
+            Staff staffFromRepo = await repo.StaffLogin(staffForLoginDto.Email, staffForLoginDto.Password);
 
             if (staffFromRepo == null) return Unauthorized();
 
@@ -131,7 +131,7 @@ namespace SportsCentre.API.Controllers
 
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-            var staff = mapper.Map<CurrentUserDto>(staffFromRepo);
+            var staff = mapper.Map<CurrentStaffDto>(staffFromRepo);
 
             return Ok(new
             {

@@ -13,6 +13,7 @@ namespace SportsCentre.API.Helpers
         public AutoMapperProfiles()
         {
             CreateMap<User, CurrentUserDto>();
+            CreateMap<Staff, CurrentStaffDto>();
             CreateMap<Booking, BookingDto>();
         }
     }

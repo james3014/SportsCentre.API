@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportsCentre.API.Data;
 
 namespace SportsCentre.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190528121610_UpdatedClassModel")]
+    partial class UpdatedClassModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,8 +64,6 @@ namespace SportsCentre.API.Migrations
                     b.Property<string>("ClassTime");
 
                     b.Property<double>("Cost");
-
-                    b.Property<string>("Facility");
 
                     b.Property<int>("MaxAttendees");
 
