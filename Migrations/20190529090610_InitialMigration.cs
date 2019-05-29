@@ -115,6 +115,8 @@ namespace SportsCentre.API.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ClassName = table.Column<string>(nullable: true),
                     ClassDate = table.Column<DateTime>(nullable: false),
+                    ClassTime = table.Column<string>(nullable: true),
+                    Facility = table.Column<string>(nullable: true),
                     MaxAttendees = table.Column<int>(nullable: false),
                     TotalAttendees = table.Column<int>(nullable: false),
                     AttendantId = table.Column<int>(nullable: true),

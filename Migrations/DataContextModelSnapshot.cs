@@ -238,7 +238,7 @@ namespace SportsCentre.API.Migrations
             modelBuilder.Entity("SportsCentre.API.Models.Class", b =>
                 {
                     b.HasOne("SportsCentre.API.Models.Staff", "Attendant")
-                        .WithMany("Classes")
+                        .WithMany()
                         .HasForeignKey("AttendantId");
                 });
 

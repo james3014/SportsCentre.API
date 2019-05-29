@@ -1,9 +1,12 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SportsCentre.API.Dtos
 {
-    public class UserForRegisterDto
+    public class StaffForRegisterDto
     {
         [Required]
         [EmailAddress(ErrorMessage = "Email Provided Is Not Valid")]
@@ -32,5 +35,8 @@ namespace SportsCentre.API.Dtos
 
         [Required(ErrorMessage = "Date of Birth Required")]
         public DateTime DateOfBirth { get; set; }
+
+        [Required(ErrorMessage = "Role Required")]
+        public string Role { get; set; }
     }
 }

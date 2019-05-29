@@ -6,31 +6,32 @@ using AutoMapper;
 using AutoMapper.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using SportsCentre.API.Data;
+using SportsCentre.API.Models;
 
 namespace SportsCentre.API.Controllers
 {
-    [Route("api/controller")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         // Private variables
         private readonly IUserRepository repo;
-        private readonly IConfiguration config;
-        private readonly IMapper mapper;
-
+        private readonly IAuthRepository authRepo;
 
         // Constructor
-        public UserController(IUserRepository repo, IConfiguration config, IMapper mapper)
+        public UserController(IUserRepository repo, IAuthRepository authRepo)
         {
-            this.config = config;
-            this.mapper = mapper;
             this.repo = repo;
+            this.authRepo = authRepo;
         }
 
-        [HttpGet("staff/attendants")]
+        [HttpGet("attendants")]
         public async Task<IActionResult> GetAttendants()
         {
+            var attendants = await repo.GetAttendants();
 
+            return Ok(attendants);
         }
+
     }
 }

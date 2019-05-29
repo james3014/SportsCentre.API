@@ -9,8 +9,8 @@ using SportsCentre.API.Data;
 namespace SportsCentre.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190528121610_UpdatedClassModel")]
-    partial class UpdatedClassModel
+    [Migration("20190529090610_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,6 +64,8 @@ namespace SportsCentre.API.Migrations
                     b.Property<string>("ClassTime");
 
                     b.Property<double>("Cost");
+
+                    b.Property<string>("Facility");
 
                     b.Property<int>("MaxAttendees");
 
@@ -238,7 +240,7 @@ namespace SportsCentre.API.Migrations
             modelBuilder.Entity("SportsCentre.API.Models.Class", b =>
                 {
                     b.HasOne("SportsCentre.API.Models.Staff", "Attendant")
-                        .WithMany("Classes")
+                        .WithMany()
                         .HasForeignKey("AttendantId");
                 });
 

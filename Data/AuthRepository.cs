@@ -67,6 +67,20 @@ namespace SportsCentre.API.Data
             return user;
         }
 
+        public async Task<Staff> CreateStaff(Staff staff, string password)
+        {
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            staff.PasswordHash = passwordHash;
+            staff.PasswordSalt = passwordSalt;
+
+            await context.Staff.AddAsync(staff);
+            await context.SaveChangesAsync();
+
+            return staff;
+        }
+
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())

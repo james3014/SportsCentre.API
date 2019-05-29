@@ -17,6 +17,5 @@ namespace SportsCentre.API.Models
         public DateTime DateOfBirth { get; set; }
         public DateTime HireDate { get; set; }
         public string Role { get; set; }
-        public Class[] Classes { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SportsCentre.API.Models;
 
 namespace SportsCentre.API.Data
@@ -30,6 +31,13 @@ namespace SportsCentre.API.Data
         public Task<Class> RemoveClass()
         {
             throw new System.NotImplementedException();
+        }
+
+        public async Task<Staff> GetStaffFromEmail(string email)
+        {
+            var staff = await context.Staff.FirstOrDefaultAsync(u => u.Email == email);
+
+            return staff;
         }
     }
 }

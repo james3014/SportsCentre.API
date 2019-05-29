@@ -54,7 +54,32 @@ namespace SportsCentre.API.Controllers
 
             User createdUser = await repo.Register(newUser, userForRegisterDto.Password);
 
-            return StatusCode(201);
+            return StatusCode(200);
+        }
+
+        [HttpPost("staff/create")]
+        public async Task<IActionResult> CreateStaff(StaffForRegisterDto staffForRegisterDto)
+        {
+            staffForRegisterDto.Email = staffForRegisterDto.Email.ToLower();
+
+            if (await repo.UserExists(staffForRegisterDto.Email)) return BadRequest("Email Already In Use");
+
+            Staff staff = new Staff
+            {
+                Email = staffForRegisterDto.Email,
+                FirstName = staffForRegisterDto.FirstName,
+                Surname = staffForRegisterDto.Surname,
+                AddressLine1 = staffForRegisterDto.AddressLine1,
+                AddressLine2 = staffForRegisterDto.AddressLine2,
+                Town = staffForRegisterDto.Town,
+                PostCode = staffForRegisterDto.PostCode,
+                DateOfBirth = staffForRegisterDto.DateOfBirth,
+                Role = staffForRegisterDto.Role
+            };
+
+            var createdStaff = await repo.CreateStaff(staff, staffForRegisterDto.Password);
+
+            return StatusCode(200);
         }
 
 

@@ -9,5 +9,6 @@ namespace SportsCentre.API.Data
         Task<Class> CreateNewClass(Class newClass);
         Task<Class> EditClass();
         Task<Class> RemoveClass();
+        Task<Staff> GetStaffFromEmail(string email);
     }
 }

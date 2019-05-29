@@ -47,6 +47,8 @@ namespace SportsCentre.API
             services.AddTransient<Seed>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDataRepository, DataRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -88,7 +90,7 @@ namespace SportsCentre.API
             }
 
             // app.UseHttpsRedirection();
-            // seeder.SeedUsers();
+            seeder.SeedUsers();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             app.UseAuthentication();
             app.UseMvc();
