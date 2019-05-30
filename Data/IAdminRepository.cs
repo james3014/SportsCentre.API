@@ -6,9 +6,12 @@ namespace SportsCentre.API.Data
 {
     public interface IAdminRepository
     {
+        Task<Class> GetClass(int id);
         Task<Class> CreateNewClass(Class newClass);
         Task<Class> EditClass();
         Task<Class> RemoveClass();
         Task<Staff> GetStaffFromEmail(string email);
+        void Delete<T>(T entity) where T : class;
+        Task<bool> SaveAll();
     }
 }

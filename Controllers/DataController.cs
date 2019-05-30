@@ -56,6 +56,14 @@ namespace SportsCentre.API.Controllers
             return Ok(bookings);
         }
 
+        [HttpGet("classes")]
+        public async Task<IActionResult> GetClasses()
+        {
+            var currentClasses = await repo.GetClasses();
+
+            return Ok(currentClasses);
+        }
+
 
         [HttpPost("bookings/create")]
         public async Task<IActionResult> CreateNewBooking(BookingDto bookingDto)
@@ -131,7 +139,6 @@ namespace SportsCentre.API.Controllers
             Booking createdBooking = await repo.CreateNewBooking(newbooking);
 
             return Ok(createdBooking);
-
         }
     }
 

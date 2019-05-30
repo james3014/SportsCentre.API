@@ -15,6 +15,13 @@ namespace SportsCentre.API.Data
         }
 
 
+        public async Task<Class> GetClass(int id)
+        {
+            var returnedClass = await context.Classes.FirstOrDefaultAsync(c => c.Id == id);
+
+            return returnedClass;
+        }
+
         public async Task<Class> CreateNewClass(Class newClass)
         {
             await context.Classes.AddAsync(newClass);
@@ -38,6 +45,16 @@ namespace SportsCentre.API.Data
             var staff = await context.Staff.FirstOrDefaultAsync(u => u.Email == email);
 
             return staff;
+        }
+
+        public void Delete<T>(T entity) where T : class
+        {
+            context.Remove(entity);
+        }
+
+        public async Task<bool> SaveAll()
+        {
+            return await context.SaveChangesAsync() > 0;
         }
     }
 }

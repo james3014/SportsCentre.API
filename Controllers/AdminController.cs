@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -102,17 +103,28 @@ namespace SportsCentre.API.Controllers
         }
 
         
-        [HttpPost("editclass")]
+        [HttpPut("editclass")]
         public Task<IActionResult> EditClass(CreateClassDto editClassDto)
         {
             throw new System.Exception();
         }
 
 
-        [HttpPost("removeclass")]
-        public Task<IActionResult> RemoveClass()
+        [HttpDelete("classes/delete{id}")]
+        public async Task<IActionResult> RemoveClass(int id)
         {
-            throw new System.Exception();
+            var classFromRepo = await repo.GetClass(id);
+
+            if (classFromRepo == null) return BadRequest("Class does not exist");
+
+            repo.Delete(classFromRepo);
+
+            if (await repo.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to delete class");
         }
     } 
 }

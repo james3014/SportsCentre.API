@@ -37,9 +37,11 @@ namespace SportsCentre.API.Data
         }
 
         // Classes
-        public Task<Class> GetCurrentClasses()
+        public async Task<IEnumerable<Class>> GetClasses()
         {
-            throw new System.NotImplementedException();
+            var currentClasses = await context.Classes.ToListAsync();
+
+            return currentClasses;
         }
 
         public async Task<User> CreateMembership(CurrentUserDto currentUserDto)
