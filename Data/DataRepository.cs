@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SportsCentre.API.Dtos;
@@ -42,6 +43,13 @@ namespace SportsCentre.API.Data
             var currentClasses = await context.Classes.ToListAsync();
 
             return currentClasses;
+        }
+
+        public async Task<IEnumerable<Class>> GetStaffClasses(Staff staffFromRepo)
+        {
+            var allClasses = await context.Classes.ToListAsync();
+
+            var selectedStaffClasses = allClasses.Where(x => x.Attendant = staffFromRepo.);
         }
 
         public async Task<User> CreateMembership(CurrentUserDto currentUserDto)

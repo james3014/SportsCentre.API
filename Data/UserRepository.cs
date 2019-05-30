@@ -26,6 +26,13 @@ namespace SportsCentre.API.Data
 
             return attendants;
         }
+
+        public async Task<IEnumerable<Staff>> GetStaff()
+        {
+            var staff = await context.Staff.ToListAsync();
+
+            return staff;
+        }
     }
 
 

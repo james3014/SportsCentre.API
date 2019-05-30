@@ -33,5 +33,13 @@ namespace SportsCentre.API.Controllers
             return Ok(attendants);
         }
 
+        [HttpGet("staff")]
+        public async Task<IActionResult> GetStaff()
+        {
+            var allStaff = await repo.GetStaff();
+
+            return Ok(allStaff);
+        }
+
     }
 }

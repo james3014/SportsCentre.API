@@ -21,13 +21,17 @@ namespace SportsCentre.API.Controllers
         private readonly IAuthRepository repo;
         private readonly IConfiguration config;
         private readonly IMapper mapper;
+        private readonly IDataRepository dataRepo;
+
+
 
 
         // Constructor
-        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper, IDataRepository dataRepo)
         {
             this.config = config;
             this.mapper = mapper;
+            this.dataRepo = dataRepo;
             this.repo = repo;
         }
 
@@ -80,6 +84,26 @@ namespace SportsCentre.API.Controllers
             var createdStaff = await repo.CreateStaff(staff, staffForRegisterDto.Password);
 
             return StatusCode(200);
+        }
+
+        [HttpDelete("staff/delete/{id}")]
+        public async Task<IActionResult> DeleteStaff(int id)
+        {
+            var staffMember = await repo.GetStaff(id);
+
+            if (staffMember == null) return BadRequest("Staff does not exist");
+
+            dataRepo.GetClasses(id);
+
+
+            repo.Delete(staffMember);
+
+            if (await repo.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to delete staff");
         }
 
 

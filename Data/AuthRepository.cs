@@ -81,6 +81,13 @@ namespace SportsCentre.API.Data
             return staff;
         }
 
+        public async Task<Staff> GetStaff(int id)
+        {
+            var staffMember = await context.Staff.FirstOrDefaultAsync(s => s.Id == id);
+
+            return staffMember;
+        }
+
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -95,6 +102,16 @@ namespace SportsCentre.API.Data
             if (await context.Users.AnyAsync(x => x.Email == email)) return true;
 
             return false;
+        }
+
+        public void Delete<T>(T entity) where T : class
+        {
+            context.Remove(entity);
+        }
+
+        public async Task<bool> SaveAll()
+        {
+            return await context.SaveChangesAsync() > 0;
         }
     }
 }

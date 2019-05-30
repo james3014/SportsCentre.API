@@ -8,6 +8,7 @@ namespace SportsCentre.API.Data
 {
     public interface IUserRepository
     {
+        Task<IEnumerable<Staff>> GetStaff();
         Task<IEnumerable<Staff>> GetAttendants();
     }
 }
