@@ -86,6 +86,28 @@ namespace SportsCentre.API.Controllers
             return StatusCode(200);
         }
 
+        [HttpPut("staff/update/{id}")]
+        public async Task<IActionResult> UpdateStaff(int id, StaffForRegisterDto staffForRegisterDto)
+        {
+            staffForRegisterDto.Email = staffForRegisterDto.Email.ToLower();
+
+            if (await repo.UserExists(staffForRegisterDto.Email)) return BadRequest("Email Already In Use");
+
+            var staffForUpdate = await repo.GetStaff(id);
+
+            if (staffForUpdate == null) BadRequest("No Staff Member Found");
+
+            mapper.Map(staffForRegisterDto, staffForUpdate);
+
+            if (await repo.SaveAll())
+            {
+                return NoContent();
+            }
+
+            throw new Exception($"Updating staff {id} failed on save");
+
+        }
+
         [HttpDelete("staff/delete/{id}")]
         public async Task<IActionResult> DeleteStaff(int id)
         {

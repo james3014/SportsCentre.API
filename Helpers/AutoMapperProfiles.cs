@@ -16,6 +16,7 @@ namespace SportsCentre.API.Helpers
             CreateMap<Staff, CurrentStaffDto>();
             CreateMap<Booking, BookingDto>();
             CreateMap<CreateClassDto, Class>();
+            CreateMap<StaffForRegisterDto, Staff>();
         }
     }
 }
