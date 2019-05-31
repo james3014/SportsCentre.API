@@ -93,8 +93,7 @@ namespace SportsCentre.API.Controllers
 
             if (staffMember == null) return BadRequest("Staff does not exist");
 
-            dataRepo.GetClasses(id);
-
+            await dataRepo.GetStaffClasses(staffMember);
 
             repo.Delete(staffMember);
 
