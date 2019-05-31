@@ -47,6 +47,24 @@ namespace SportsCentre.API.Controllers
            throw new Exception($"Updating user {user.Id} failed on save");
         }
 
+        [HttpGet("membership/cancel/{id}")]
+        public async Task<IActionResult> CancelMembership(int id)
+        {
+            User user = await repo.GetUser(id);
+
+            if (user == null) return BadRequest("User does not exist");
+
+            user.MembershipType = "";
+            user.MembershipExpiry = DateTime.Now;
+
+            if (await repo.SaveAll())
+            {
+                return NoContent();
+            }
+
+            throw new Exception($"Cancelling membership failed on save");
+        }
+
 
         [HttpGet("bookings")]
         public async Task<IActionResult> GetAllBookings()

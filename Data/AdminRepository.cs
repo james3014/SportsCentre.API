@@ -30,11 +30,6 @@ namespace SportsCentre.API.Data
             return newClass;
         }
 
-        public Task<Class> EditClass()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Task<Class> RemoveClass()
         {
             throw new System.NotImplementedException();

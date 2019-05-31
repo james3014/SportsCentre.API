@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SportsCentre.API.Data;
@@ -14,13 +15,13 @@ namespace SportsCentre.API.Controllers
     {
         private readonly IAdminRepository repo;
         private readonly IDataRepository dataRepo;
-        private readonly IConfiguration config;
+        private readonly IMapper mapper;
 
-        public AdminController(IAdminRepository repo, IConfiguration config, IDataRepository dataRepo)
+        public AdminController(IAdminRepository repo, IDataRepository dataRepo, IMapper mapper)
         {
             this.repo = repo;
-            this.config = config;
             this.dataRepo = dataRepo;
+            this.mapper = mapper;
         }
 
 
@@ -102,11 +103,79 @@ namespace SportsCentre.API.Controllers
             return Ok(createdClass);
         }
 
-        
-        [HttpPut("editclass")]
-        public Task<IActionResult> EditClass(CreateClassDto editClassDto)
+
+        [HttpPut("classes/update/{id}")]
+        public async Task<IActionResult> EditClass(int id, CreateClassDto createClassDto)
         {
-            throw new System.Exception();
+            var classFromRepo = await repo.GetClass(id);
+
+            if (classFromRepo == null) return BadRequest("No Class Found");
+
+            var staff = await repo.GetStaffFromEmail(createClassDto.AttendantEmail);
+
+            if (staff == null) return null;
+
+            switch (createClassDto.Facility)
+            {
+                case "1":
+                    createClassDto.Facility = "Full Hall";
+                    break;
+                case "2":
+                    createClassDto.Facility = "Half Hall";
+                    break;
+                case "3":
+                    createClassDto.Facility = "Small Area";
+                    break;
+            }
+
+            switch (createClassDto.ClassTime)
+            {
+                case "1":
+                    createClassDto.ClassTime = "08:00 - 09:00";
+                    break;
+                case "2":
+                    createClassDto.ClassTime = "09:00 - 10:00";
+                    break;
+                case "3":
+                    createClassDto.ClassTime = "10:00 - 11:00";
+                    break;
+                case "4":
+                    createClassDto.ClassTime = "11:00 - 12:00";
+                    break;
+                case "5":
+                    createClassDto.ClassTime = "12:00 - 13:00";
+                    break;
+                case "6":
+                    createClassDto.ClassTime = "13:00 - 14:00";
+                    break;
+                case "7":
+                    createClassDto.ClassTime = "14:00 - 15:00";
+                    break;
+                case "8":
+                    createClassDto.ClassTime = "15:00 - 16:00";
+                    break;
+                case "9":
+                    createClassDto.ClassTime = "16:00 - 17:00";
+                    break;
+                case "10":
+                    createClassDto.ClassTime = "17:00 - 18:00";
+                    break;
+                case "11":
+                    createClassDto.ClassTime = "18:00 - 19:00";
+                    break;
+                case "12":
+                    createClassDto.ClassTime = "19:00 - 20:00";
+                    break;
+            }
+
+            mapper.Map(createClassDto, classFromRepo);
+
+            if (await repo.SaveAll())
+            {
+                return NoContent();
+            }
+
+            throw new Exception($"Updating class {id} failed on save");
         }
 
 
