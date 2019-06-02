@@ -45,6 +45,13 @@ namespace SportsCentre.API.Data
             return currentClasses;
         }
 
+        public async Task<Class> GetClass(int id)
+        {
+            var selectedClass = await context.Classes.FirstOrDefaultAsync(c => c.Id == id);
+
+            return selectedClass;
+        }
+
         public async Task<IEnumerable<Class>> GetStaffClasses(Staff staffFromRepo)
         {
             var selectedStaffClasses = await context.Classes.Where(s => s.Attendant.Id == staffFromRepo.Id).ToListAsync();

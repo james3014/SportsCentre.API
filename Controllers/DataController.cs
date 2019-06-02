@@ -82,6 +82,36 @@ namespace SportsCentre.API.Controllers
             return Ok(currentClasses);
         }
 
+        [HttpPost("bookings/classes/{id}")]
+        public async Task<IActionResult> BookClass(int id, ClassBookingDto classBookingDto)
+        {
+            Class selectedClass = await repo.GetClass(id);
+
+            if (selectedClass == null) return null;
+
+            User user = await repo.GetUserFromEmail(classBookingDto.Email);
+
+            if (user == null) return null;
+
+            Booking newbooking = new Booking
+            {
+                BookingEmail = user.Email,
+                Facility = selectedClass.Facility,
+                ContactNumber = classBookingDto.ContactNumber,
+                BookingType = "Class",
+                BookingDate = selectedClass.ClassDate,
+                BookingTime = selectedClass.ClassTime,
+                Requirements = classBookingDto.Requirements,
+                CreatedBy = user
+            };
+
+            Booking createdBooking = await repo.CreateNewBooking(newbooking);
+
+            return Ok(createdBooking);
+
+
+        }
+
 
         [HttpPost("bookings/create")]
         public async Task<IActionResult> CreateNewBooking(BookingDto bookingDto)
