@@ -113,7 +113,7 @@ namespace SportsCentre.API.Controllers
         }
 
 
-        [HttpPost("bookings/create")]
+        [HttpPost("bookings/facility")]
         public async Task<IActionResult> CreateNewBooking(BookingDto bookingDto)
         {
             User user = await repo.GetUserFromEmail(bookingDto.Email);
@@ -177,10 +177,36 @@ namespace SportsCentre.API.Controllers
             Booking newbooking = new Booking
             {
                 BookingEmail = bookingDto.Email,
-                BookingType = bookingDto.Facility,
+                Facility = bookingDto.Facility,
+                BookingType = "Facility",
                 BookingDate = bookingDto.BookingDate,
                 BookingTime = bookingDto.BookingTime,
                 Requirements = bookingDto.Requirements,
+                CreatedBy = user
+            };
+
+            Booking createdBooking = await repo.CreateNewBooking(newbooking);
+
+            return Ok(createdBooking);
+        }
+
+        [HttpPost("bookings/function")]
+        public async Task<IActionResult> BookFunction(FunctionBookingDto functionBookingDto)
+        {
+            User user = await repo.GetUserFromEmail(functionBookingDto.Email);
+
+            if (user == null) return null;
+
+            Booking newbooking = new Booking
+            {
+                BookingEmail = functionBookingDto.Email,
+                ContactNumber = functionBookingDto.ContactNumber,
+                Facility = "Function Suite",
+                Attendees = functionBookingDto.Attendees,
+                BookingType = "Function",
+                BookingDate = functionBookingDto.BookingDate,
+                BookingTime = "Full Day",
+                Requirements = functionBookingDto.Requirements,
                 CreatedBy = user
             };
 

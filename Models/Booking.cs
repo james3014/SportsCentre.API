@@ -12,6 +12,7 @@ namespace SportsCentre.API.Models
         public User CreatedBy { get; set; }
         public string BookingType { get; set; }
         public string Facility { get; set; }
+        public string Attendees { get; set; }
         public string Requirements { get; set; }
     }
 }
