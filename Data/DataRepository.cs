@@ -29,6 +29,20 @@ namespace SportsCentre.API.Data
             return bookings;
         }
 
+        public async Task<IEnumerable<Booking>> GetUserBookings(int id)
+        {
+            var userBookings = await context.Bookings.Where(i => i.CreatedBy.Id == id).ToListAsync();
+
+            return userBookings;
+        }
+
+        public async Task<Booking> GetBooking(int id)
+        {
+            var booking = await context.Bookings.FirstOrDefaultAsync(i => i.Id == id);
+
+            return booking;
+        }
+
         public async Task<Booking> CreateNewBooking(Booking newBooking)
         {
             await context.Bookings.AddAsync(newBooking);
@@ -97,6 +111,12 @@ namespace SportsCentre.API.Data
 
             return user;
         }
+
+        public void Delete<T>(T entity) where T : class
+        {
+            context.Remove(entity);
+        }
+
 
         // Save All Changes
         public async Task<bool> SaveAll()

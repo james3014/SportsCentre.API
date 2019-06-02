@@ -74,6 +74,33 @@ namespace SportsCentre.API.Controllers
             return Ok(bookings);
         }
 
+        [HttpGet("bookings/{id}")]
+        public async Task<IActionResult> GetUserBookings(int id)
+        {
+            var bookings = await repo.GetUserBookings(id);
+
+            return Ok(bookings);
+        }
+
+        [HttpDelete("bookings/cancel/{id}")]
+        public async Task<IActionResult> CancelUserBooking(int id)
+        {
+            var booking = await repo.GetBooking(id);
+
+            if (booking == null) return BadRequest("Booking does not exist");
+
+            repo.Delete(booking);
+
+            if (await repo.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to delete booking");
+        }
+
+
+
         [HttpGet("classes")]
         public async Task<IActionResult> GetClasses()
         {

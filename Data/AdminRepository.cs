@@ -30,11 +30,6 @@ namespace SportsCentre.API.Data
             return newClass;
         }
 
-        public Task<Class> RemoveClass()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public async Task<Staff> GetStaffFromEmail(string email)
         {
             var staff = await context.Staff.FirstOrDefaultAsync(u => u.Email == email);
