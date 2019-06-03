@@ -67,29 +67,27 @@ namespace SportsCentre.API
                 };
             });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-                options.AddPolicy("RequireStaffRole", policy => policy.RequireRole("Staff"));
-                options.AddPolicy("RequireMemberRole", policy => policy.RequireRole("Member"));
-                options.AddPolicy("RequireUserRole", policy => policy.RequireRole("User"));
-            });
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+            //    options.AddPolicy("RequireMemberRole", policy => policy.RequireRole("Member"));
+            //    options.AddPolicy("RequireManagerRole", policy => policy.RequireRole("Staff"));
+            //});
 
             // Application Services
             services.AddMvc(options =>
-                    {
-                        var policy = new AuthorizationPolicyBuilder()
-                            .RequireAuthenticatedUser()
-                            .Build();
-
-                        options.Filters.Add(new AuthorizeFilter(policy));
-                    }
-                ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                            .AddJsonOptions(opt =>
-                            {
-                                opt.SerializerSettings.ReferenceLoopHandling
-                                = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                            });
+            {
+                //var policy = new AuthorizationPolicyBuilder()
+                //    .RequireAuthenticatedUser()
+                //    .Build();
+                //options.Filters.Add(new AuthorizeFilter(policy));
+            })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(opt =>
+                {
+                    opt.SerializerSettings.ReferenceLoopHandling =
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
             services.AddCors();
             services.AddAutoMapper();
             services.AddTransient<Seed>();
@@ -129,7 +127,7 @@ namespace SportsCentre.API
 
             // app.UseHttpsRedirection();
             // seeder.SeedUsers();
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseMvc();
         }

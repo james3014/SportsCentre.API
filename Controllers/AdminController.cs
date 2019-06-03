@@ -34,8 +34,8 @@ namespace SportsCentre.API.Controllers
         }
 
 
-        [Authorize(Policy = "RequireAdminRole")]
-        [HttpGet("userswithroles")]
+
+        [HttpGet("usersWithRoles")]
         public async Task<IActionResult> GetUsersWithRoles()
         {
             var userList = await (from user in context.Users
@@ -56,7 +56,6 @@ namespace SportsCentre.API.Controllers
 
 
 
-        [Authorize(Policy = "RequireAdminRole")]
         [HttpPost("editroles/{userName}")]
         public async Task<IActionResult> EditRoles(string userName, RoleEditDto roleEditDto)
         {
@@ -82,8 +81,6 @@ namespace SportsCentre.API.Controllers
 
 
 
-
-        [Authorize(Policy ="RequireAdminRole")]
         [HttpPost("classes/create")]
         public async Task<IActionResult> CreateNewClass(CreateClassDto createClassDto)
         {
@@ -163,8 +160,6 @@ namespace SportsCentre.API.Controllers
         }
         
 
-
-        [Authorize(Policy = "RequireAdminRole")]
         [HttpPut("classes/update/{id}")]
         public async Task<IActionResult> EditClass(int id, CreateClassDto createClassDto)
         {
@@ -240,7 +235,6 @@ namespace SportsCentre.API.Controllers
         }
 
 
-        [Authorize(Policy = "RequireAdminRole")]
         [HttpDelete("classes/delete{id}")]
         public async Task<IActionResult> RemoveClass(int id)
         {
