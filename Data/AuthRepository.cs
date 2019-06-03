@@ -26,17 +26,6 @@ namespace SportsCentre.API.Data
             return user;
         }
 
-        public async Task<Staff> StaffLogin(string email, string password)
-        {
-            Staff staff = await context.Staff.FirstOrDefaultAsync(x => x.Email == email);
-
-            if (staff == null) return null;
-
-            if (!VerifyPasswordHash(password, staff.PasswordHash, staff.PasswordSalt)) return null;
-
-            return staff;
-        }
-
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
@@ -66,23 +55,23 @@ namespace SportsCentre.API.Data
             return user;
         }
 
-        public async Task<Staff> CreateStaff(Staff staff, string password)
+        //public async Task<User> CreateStaff(User staff, string password)
+        //{
+        //    byte[] passwordHash, passwordSalt;
+        //    CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+        //    staff.PasswordHash = passwordHash;
+        //    staff.PasswordSalt = passwordSalt;
+
+        //    await context.Staff.AddAsync(staff);
+        //    await context.SaveChangesAsync();
+
+        //    return staff;
+        //}
+
+        public async Task<User> GetStaff(int id)
         {
-            byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-            staff.PasswordHash = passwordHash;
-            staff.PasswordSalt = passwordSalt;
-
-            await context.Staff.AddAsync(staff);
-            await context.SaveChangesAsync();
-
-            return staff;
-        }
-
-        public async Task<Staff> GetStaff(int id)
-        {
-            var staffMember = await context.Staff.FirstOrDefaultAsync(s => s.Id == id);
+            var staffMember = await context.Users.FirstOrDefaultAsync(s => s.Id == id);
 
             return staffMember;
         }

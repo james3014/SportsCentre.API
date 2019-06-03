@@ -9,8 +9,7 @@ namespace SportsCentre.API.Dtos
     public class StaffForRegisterDto
     {
         [Required]
-        [EmailAddress(ErrorMessage = "Email Provided Is Not Valid")]
-        public string Email { get; set; }
+        public string UserName { get; set; }
 
         [Required]
         [StringLength(20, MinimumLength = 8, ErrorMessage = "Password Must Be At Least 8 Characters")]
@@ -35,8 +34,5 @@ namespace SportsCentre.API.Dtos
 
         [Required(ErrorMessage = "Date of Birth Required")]
         public DateTime DateOfBirth { get; set; }
-
-        [Required(ErrorMessage = "Role Required")]
-        public string Role { get; set; }
     }
 }

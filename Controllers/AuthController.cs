@@ -53,6 +53,8 @@ namespace SportsCentre.API.Controllers
 
             var result = await userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
 
+            await userManager.AddToRoleAsync(userToCreate, "User");
+
             var userToReturn = mapper.Map <UserForDetailedDto>(userToCreate);
 
             if (result.Succeeded)
@@ -69,26 +71,22 @@ namespace SportsCentre.API.Controllers
         [HttpPost("staff/create")]
         public async Task<IActionResult> CreateStaff(StaffForRegisterDto staffForRegisterDto)
         {
-            staffForRegisterDto.Email = staffForRegisterDto.Email.ToLower();
+            var userToCreate = mapper.Map<User>(staffForRegisterDto);
 
-            if (await repo.UserExists(staffForRegisterDto.Email)) return BadRequest("Email Already In Use");
+            var result = await userManager.CreateAsync(userToCreate, staffForRegisterDto.Password);
 
-            Staff staff = new Staff
+            await userManager.AddToRoleAsync(userToCreate, "Staff");
+
+            var userToReturn = mapper.Map<UserForDetailedDto>(userToCreate);
+
+            if (result.Succeeded)
             {
-                Email = staffForRegisterDto.Email,
-                FirstName = staffForRegisterDto.FirstName,
-                Surname = staffForRegisterDto.Surname,
-                AddressLine1 = staffForRegisterDto.AddressLine1,
-                AddressLine2 = staffForRegisterDto.AddressLine2,
-                Town = staffForRegisterDto.Town,
-                PostCode = staffForRegisterDto.PostCode,
-                DateOfBirth = staffForRegisterDto.DateOfBirth,
-                Role = staffForRegisterDto.Role
-            };
+                return CreatedAtRoute("GetUser", new { controller = "User", id = userToCreate.Id }, userToReturn);
+            }
 
-            var createdStaff = await repo.CreateStaff(staff, staffForRegisterDto.Password);
+            return BadRequest(result.Errors);
 
-            return StatusCode(200);
+
         }
 
 
@@ -97,9 +95,9 @@ namespace SportsCentre.API.Controllers
         [HttpPut("staff/update/{id}")]
         public async Task<IActionResult> UpdateStaff(int id, StaffForRegisterDto staffForRegisterDto)
         {
-            staffForRegisterDto.Email = staffForRegisterDto.Email.ToLower();
+            staffForRegisterDto.UserName = staffForRegisterDto.UserName.ToLower();
 
-            if (await repo.UserExists(staffForRegisterDto.Email)) return BadRequest("Email Already In Use");
+            if (await repo.UserExists(staffForRegisterDto.UserName)) return BadRequest("Username Already In Use");
 
             var staffForUpdate = await repo.GetStaff(id);
 
@@ -199,45 +197,42 @@ namespace SportsCentre.API.Controllers
 
 
 
+        //[HttpPost("staff")]
+        //public async Task<IActionResult> StaffLogin(StaffForLoginDto staffForLoginDto)
+        //{
+        //    Staff staffFromRepo = await repo.StaffLogin(staffForLoginDto.Email, staffForLoginDto.Password);
 
+        //    if (staffFromRepo == null) return Unauthorized();
 
-        [HttpPost("staff")]
-        public async Task<IActionResult> StaffLogin(StaffForLoginDto staffForLoginDto)
-        {
-            Staff staffFromRepo = await repo.StaffLogin(staffForLoginDto.Email, staffForLoginDto.Password);
+        //    var claims = new[]
+        //    {
+        //        new Claim(ClaimTypes.Email, staffFromRepo.Email),
+        //        new Claim(ClaimTypes.Name, staffFromRepo.FirstName),
+        //        new Claim(ClaimTypes.Role, staffFromRepo.Role)
+        //    };
 
-            if (staffFromRepo == null) return Unauthorized();
+        //    SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("AppSettings:Token").Value));
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Email, staffFromRepo.Email),
-                new Claim(ClaimTypes.Name, staffFromRepo.FirstName),
-                new Claim(ClaimTypes.Role, staffFromRepo.Role)
-            };
+        //    SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("AppSettings:Token").Value));
+        //    SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(claims),
+        //        Expires = DateTime.Now.AddDays(1),
+        //        SigningCredentials = creds
+        //    };
 
-            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        //    JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
-            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
-            };
+        //    SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+        //    var staff = mapper.Map<CurrentStaffDto>(staffFromRepo);
 
-            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-
-            var staff = mapper.Map<CurrentStaffDto>(staffFromRepo);
-
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token),
-                staff
-            });
-
-        }
+        //    return Ok(new
+        //    {
+        //        token = tokenHandler.WriteToken(token),
+        //        staff
+        //    });
+        //}
     }
 }

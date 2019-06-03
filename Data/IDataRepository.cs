@@ -13,7 +13,7 @@ namespace SportsCentre.API.Data
         Task<IEnumerable<Booking>> GetUserBookings(int id);
         Task<Booking> GetBooking(int id);
         Task<Class> GetClass(int id);
-        Task<IEnumerable<Class>> GetStaffClasses(Staff staffFromRepo);
+        Task<IEnumerable<Class>> GetStaffClasses(User staffFromRepo);
         Task<User> CreateMembership(CurrentUserDto currentUserDto);
         Task<Booking> CreateNewBooking(Booking newBooking);
         Task<IEnumerable<Booking>> GetBookings();

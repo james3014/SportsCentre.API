@@ -15,7 +15,6 @@ namespace SportsCentre.API.Data
         public DbSet<Club> Clubs { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Staff> Staff { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

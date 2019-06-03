@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SportsCentre.API.Models;
 
@@ -10,28 +11,27 @@ namespace SportsCentre.API.Data
     public class UserRepository : IUserRepository
     {
         private readonly DataContext context;
+        private readonly UserManager<User> userManager;
 
-
-        public UserRepository(DataContext context)
+        public UserRepository(DataContext context, UserManager<User> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
 
-        public async Task<IEnumerable<Staff>> GetAttendants()
+        public async Task<IEnumerable<User>> GetAttendants()
         {
-            var staff = await context.Staff.ToListAsync();
-
-            var attendants = staff.Where(o => o.Role.Equals("Attendant"));
+            var attendants = await userManager.GetUsersInRoleAsync("Attendants");
 
             return attendants;
         }
 
-        public async Task<IEnumerable<Staff>> GetStaff()
+        public async Task<IEnumerable<User>> GetStaff()
         {
-            var staff = await context.Staff.ToListAsync();
+            var allStaff = await userManager.GetUsersInRoleAsync("Staff");
 
-            return staff;
+            return allStaff;
         }
 
         public async Task<User> GetUser(int id)
