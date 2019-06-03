@@ -101,21 +101,31 @@ namespace SportsCentre.API.Data
             return staffMember;
         }
 
-        //private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        //{
-        //    using (var hmac = new System.Security.Cryptography.HMACSHA512())
-        //    {
-        //        passwordSalt = hmac.Key;
-        //        passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-        //    }
-        //}
+        /*
+         * This function is used to create a password hash for the user. The password is passed in and using
+         * a system cryptography library a hash and salt are generated. These are these passed out as byte arrays.
+         */
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+        }
 
-        //public async Task<bool> UserExists(string email)
-        //{
-        //    if (await context.Users.AnyAsync(x => x.Email == email)) return true;
 
-        //    return false;
-        //}
+        /*
+        * This function is used to confirm that the user exists within the database.
+        * The user email is passed from the controller and context is used to find them.
+        * If found a boolean is returned to the controller.
+        */
+        public async Task<bool> UserExists(string email)
+        {
+           if (await context.Users.AnyAsync(x => x.Email == email)) return true;
+
+            return false;
+        }
 
 
         /*
