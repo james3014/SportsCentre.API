@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SportsCentre.API.Migrations
 {
-    public partial class UpdatedClassModel : Migration
+    public partial class InitialModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -220,40 +220,6 @@ namespace SportsCentre.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bookings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BookingEmail = table.Column<string>(nullable: true),
-                    ContactNumber = table.Column<string>(nullable: true),
-                    BookingDate = table.Column<DateTime>(nullable: false),
-                    BookingTime = table.Column<string>(nullable: true),
-                    CreatedById = table.Column<int>(nullable: true),
-                    BookingType = table.Column<string>(nullable: true),
-                    Facility = table.Column<string>(nullable: true),
-                    Attendees = table.Column<string>(nullable: true),
-                    Requirements = table.Column<string>(nullable: true),
-                    ClubId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bookings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Clubs_ClubId",
-                        column: x => x.ClubId,
-                        principalTable: "Clubs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bookings_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
                 {
@@ -304,6 +270,47 @@ namespace SportsCentre.API.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Bookings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BookingEmail = table.Column<string>(nullable: true),
+                    ContactNumber = table.Column<string>(nullable: true),
+                    BookingDate = table.Column<DateTime>(nullable: false),
+                    BookingTime = table.Column<string>(nullable: true),
+                    CreatedById = table.Column<int>(nullable: true),
+                    BookingType = table.Column<string>(nullable: true),
+                    ClassId = table.Column<int>(nullable: true),
+                    FacilityType = table.Column<string>(nullable: true),
+                    Attendees = table.Column<string>(nullable: true),
+                    Requirements = table.Column<string>(nullable: true),
+                    ClubId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Classes_ClassId",
+                        column: x => x.ClassId,
+                        principalTable: "Classes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Clubs_ClubId",
+                        column: x => x.ClubId,
+                        principalTable: "Clubs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bookings_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -340,6 +347,11 @@ namespace SportsCentre.API.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_ClassId",
+                table: "Bookings",
+                column: "ClassId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_ClubId",
@@ -393,9 +405,6 @@ namespace SportsCentre.API.Migrations
                 name: "Bookings");
 
             migrationBuilder.DropTable(
-                name: "Classes");
-
-            migrationBuilder.DropTable(
                 name: "Items");
 
             migrationBuilder.DropTable(
@@ -403,6 +412,9 @@ namespace SportsCentre.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Classes");
 
             migrationBuilder.DropTable(
                 name: "Orders");

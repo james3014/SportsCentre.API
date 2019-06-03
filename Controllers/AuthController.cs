@@ -22,7 +22,6 @@ namespace SportsCentre.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        // Private variables
         private readonly IAuthRepository repo;
         private readonly IConfiguration config;
         private readonly IMapper mapper;
@@ -31,8 +30,10 @@ namespace SportsCentre.API.Controllers
         private readonly SignInManager<User> signInManager;
 
 
-
-        // Constructor
+        /*
+        * This public constructor is used to inject several services into the application.
+        * These can then be used for accessing the corresponding repository.
+        */
         public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper,
             IDataRepository dataRepo, UserManager<User> userManager, SignInManager<User> signInManager)
         {
@@ -45,7 +46,12 @@ namespace SportsCentre.API.Controllers
         }
 
 
-        // Register controller route
+        /*
+         * This function is used to allow a new user to register an account.
+         * Their information is passed via the userForRegisterDto. The user is then passed 
+         * to the User Managers create function. A role is assigned to the new user and 
+         * auto mapper is used to map the data transfer object to the user.
+         */
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
@@ -67,7 +73,12 @@ namespace SportsCentre.API.Controllers
 
 
 
-
+        /*
+         * This function is used to add new staff members to via the administration panel.
+         * The staffForRegisterDto is used to pass the data from the client and this is then
+         * mapped to a new User via auto mapper. As this will be a staff member they are assigned
+         * a relevant role via the User Manager.
+         */
         [HttpPost("staff/create")]
         public async Task<IActionResult> CreateStaff(StaffForRegisterDto staffForRegisterDto)
         {
@@ -91,7 +102,11 @@ namespace SportsCentre.API.Controllers
 
 
 
-
+        /*
+         * This function is used to provide an update end point for staff via the administration panel.
+         * The staff member ID is passed from the client and the corresponding repo function is used to 
+         * find the staff. Once found auto mapper is used to map the staff member and complete the update.
+         */
         [HttpPut("staff/update/{id}")]
         public async Task<IActionResult> UpdateStaff(int id, StaffForRegisterDto staffForRegisterDto)
         {
@@ -111,11 +126,14 @@ namespace SportsCentre.API.Controllers
             }
 
             throw new Exception($"Updating staff {id} failed on save");
-
         }
 
 
-
+        /*
+         * This function is used to provide a delete end point for staff members via the administration panel.
+         * The staff member ID is passed from the client and once found via the repo it is passed to the delete
+         * function. 
+         */
         [HttpDelete("staff/delete/{id}")]
         public async Task<IActionResult> DeleteStaff(int id)
         {
@@ -136,7 +154,12 @@ namespace SportsCentre.API.Controllers
         }
 
 
-
+        /*
+         * This function provides a login method for users and staff members.
+         * The same data transfer object is used for both and if this succeeds then
+         * the user is located. A JWT is generated for the user from the GenerateJwtToken method
+         * and this provides relevant data such as the username and role.
+         */
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userforLoginDto)
         {
@@ -160,8 +183,14 @@ namespace SportsCentre.API.Controllers
             return Unauthorized();
         }
 
-
-
+        /*
+         * This function is used to construct a JWT token for users upon login.
+         * A user object is passed to the function and claims are setup for the user.
+         * The token is generated after it has been provided with claims, an expiry and 
+         * signing crendentials. If the function succeeds the token returned back to the client
+         * and can then be accessed and used.
+         * 
+         */
         private async Task<string> GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
@@ -196,6 +225,7 @@ namespace SportsCentre.API.Controllers
         }
 
 
+        // NO LONGER REQUIRED BY THE CONTROLLER
 
         //[HttpPost("staff")]
         //public async Task<IActionResult> StaffLogin(StaffForLoginDto staffForLoginDto)

@@ -16,6 +16,14 @@ namespace SportsCentre.API.Data
             this.roleManager = roleManager;
         }
 
+
+        /*
+         * This function has been created to be ran once. The function is used to seed 4 initial users
+         * into the database with relevant data as well as an admin account. The function also sets up the
+         * roles for the system.
+         * 
+         * The function is ran from the startup class but is currently disabled and should not be ran again.
+         */
         public void SeedUsers()
         {
             var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");

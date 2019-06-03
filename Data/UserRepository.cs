@@ -20,6 +20,11 @@ namespace SportsCentre.API.Data
         }
 
 
+        /*
+         * This function is used to return all staff members with the Attendant role
+         * for use in creating a new class. The context is used to complete a query and 
+         * all attendants are returned.
+         */
         public async Task<IEnumerable<User>> GetAttendants()
         {
             var attendants = await userManager.GetUsersInRoleAsync("Attendant");
@@ -27,6 +32,9 @@ namespace SportsCentre.API.Data
             return attendants;
         }
 
+        /* This function is used to retrieve all staff with the staff role from the database.
+         * User Manager is used to complete this and the collection of staff is then returned.
+         */
         public async Task<IEnumerable<User>> GetStaff()
         {
             var allStaff = await userManager.GetUsersInRoleAsync("Staff");
@@ -34,6 +42,11 @@ namespace SportsCentre.API.Data
             return allStaff;
         }
 
+        /*
+         * This function is used to get a specific user from the database.
+         * The user ID is passed from the controller and this is assigned to a query.
+         * The query is then used to locate the user and return them.
+         */
         public async Task<User> GetUser(int id)
         {
             var query = context.Users.AsQueryable();

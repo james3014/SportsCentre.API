@@ -8,6 +8,9 @@ namespace SportsCentre.API.Data
     public class DataContext : IdentityDbContext<User, Role, int, IdentityUserClaim<int>, UserRole,
         IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
     {   
+        /*
+         * Initialise the database with the entities required
+         */
         public DataContext(DbContextOptions<DataContext> options) : base (options) {}
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }

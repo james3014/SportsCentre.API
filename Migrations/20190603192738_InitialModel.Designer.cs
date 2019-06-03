@@ -9,8 +9,8 @@ using SportsCentre.API.Data;
 namespace SportsCentre.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190603144832_UpdatedClassModel")]
-    partial class UpdatedClassModel
+    [Migration("20190603192738_InitialModel")]
+    partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -101,17 +101,21 @@ namespace SportsCentre.API.Migrations
 
                     b.Property<string>("BookingType");
 
+                    b.Property<int?>("ClassId");
+
                     b.Property<int?>("ClubId");
 
                     b.Property<string>("ContactNumber");
 
                     b.Property<int?>("CreatedById");
 
-                    b.Property<string>("Facility");
+                    b.Property<string>("FacilityType");
 
                     b.Property<string>("Requirements");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
 
                     b.HasIndex("ClubId");
 
@@ -362,6 +366,10 @@ namespace SportsCentre.API.Migrations
 
             modelBuilder.Entity("SportsCentre.API.Models.Booking", b =>
                 {
+                    b.HasOne("SportsCentre.API.Models.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId");
+
                     b.HasOne("SportsCentre.API.Models.Club")
                         .WithMany("Bookings")
                         .HasForeignKey("ClubId");

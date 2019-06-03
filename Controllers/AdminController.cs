@@ -17,12 +17,17 @@ namespace SportsCentre.API.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
+        // Private class variables
         private readonly DataContext context;
         private readonly IAdminRepository repo;
         private readonly IDataRepository dataRepo;
         private readonly IMapper mapper;
         private readonly UserManager<User> userManager;
 
+        /**
+         * This public constructor is used to inject several services into the application.
+         * These can then be used for accessing the corresponding repository.
+         */
         public AdminController(DataContext context, IAdminRepository repo, IDataRepository dataRepo,
             IMapper mapper, UserManager<User> userManager)
         {
@@ -33,8 +38,10 @@ namespace SportsCentre.API.Controllers
             this.userManager = userManager;
         }
 
-
-
+        /**
+         * This function is used to provide the role management panel with details of all users and roles.
+         * A LINQ query is ran with a join to bring together both the Users and Roles tables from Identity.
+         */
         [HttpGet("usersWithRoles")]
         public async Task<IActionResult> GetUsersWithRoles()
         {
@@ -55,7 +62,11 @@ namespace SportsCentre.API.Controllers
         }
 
 
-
+        /**
+         * This function provides an update end point for the edit roles feature of the administrator.
+         * The function finds the user via the username parameter and then finds all current roles for the user.
+         * The new roles are then allocated as part of a string array to the user and the new roles are returned.
+         */
         [HttpPost("editroles/{userName}")]
         public async Task<IActionResult> EditRoles(string userName, RoleEditDto roleEditDto)
         {
@@ -80,7 +91,11 @@ namespace SportsCentre.API.Controllers
     
 
 
-
+        /**
+         * This function is used by administrators to create a new class for the leisure center.
+         * It initially finds the attendant who will be running the class via their username.
+         * After which a new class is created with detailed from the data transfer object.
+         */
         [HttpPost("classes/create")]
         public async Task<IActionResult> CreateNewClass(CreateClassDto createClassDto)
         {
@@ -159,7 +174,13 @@ namespace SportsCentre.API.Controllers
             return Ok(createdClass);
         }
         
-
+        
+        /**
+         * This function is used to provide a class update end point for the administrator.
+         * It takes the createClassDto and finds the current class from it's ID. The attendant 
+         * is then found via their username and automapper is used to map the updated details to the 
+         * current class
+         */
         [HttpPut("classes/update/{id}")]
         public async Task<IActionResult> EditClass(int id, CreateClassDto createClassDto)
         {
@@ -234,7 +255,11 @@ namespace SportsCentre.API.Controllers
             throw new Exception($"Updating class {id} failed on save");
         }
 
-
+        /**
+         * This function is used to delete a class from the database.
+         * A class ID is passed from the client which allows the class to be found.
+         * Once found the delete entity function inside the corresponding repository is called.
+         */
         [HttpDelete("classes/delete{id}")]
         public async Task<IActionResult> RemoveClass(int id)
         {
