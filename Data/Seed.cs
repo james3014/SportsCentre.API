@@ -23,11 +23,11 @@ namespace SportsCentre.API.Data
 
             var roles = new List<Role>
             {
-                new Role{Name = "Guest"},
                 new Role{Name = "User"},
                 new Role{Name = "Member"},
                 new Role{Name = "Staff"},
                 new Role{Name = "Admin"},
+                new Role{Name = "Attendant"}
             };
 
             foreach (var role in roles)
@@ -51,7 +51,7 @@ namespace SportsCentre.API.Data
             if (result.Succeeded)
             {
                 var admin = userManager.FindByNameAsync("Admin").Result;
-                userManager.AddToRolesAsync(admin, new[] { "Admin", "Staff" }).Wait();
+                userManager.AddToRolesAsync(admin, new[] { "Admin" }).Wait();
             }
         }
     }

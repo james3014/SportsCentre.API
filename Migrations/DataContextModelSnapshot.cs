@@ -99,8 +99,6 @@ namespace SportsCentre.API.Migrations
 
                     b.Property<string>("BookingType");
 
-                    b.Property<int?>("ClassId");
-
                     b.Property<int?>("ClubId");
 
                     b.Property<string>("ContactNumber");
@@ -113,8 +111,6 @@ namespace SportsCentre.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassId");
-
                     b.HasIndex("ClubId");
 
                     b.HasIndex("CreatedById");
@@ -126,8 +122,6 @@ namespace SportsCentre.API.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("AttendantId");
 
                     b.Property<DateTime>("ClassDate");
 
@@ -143,9 +137,11 @@ namespace SportsCentre.API.Migrations
 
                     b.Property<int>("TotalAttendees");
 
+                    b.Property<int?>("UserId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AttendantId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Classes");
                 });
@@ -245,40 +241,6 @@ namespace SportsCentre.API.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
-                });
-
-            modelBuilder.Entity("SportsCentre.API.Models.Staff", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AddressLine1");
-
-                    b.Property<string>("AddressLine2");
-
-                    b.Property<DateTime>("DateOfBirth");
-
-                    b.Property<string>("Email");
-
-                    b.Property<string>("FirstName");
-
-                    b.Property<DateTime>("HireDate");
-
-                    b.Property<byte[]>("PasswordHash");
-
-                    b.Property<byte[]>("PasswordSalt");
-
-                    b.Property<string>("PostCode");
-
-                    b.Property<string>("Role");
-
-                    b.Property<string>("Surname");
-
-                    b.Property<string>("Town");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Staff");
                 });
 
             modelBuilder.Entity("SportsCentre.API.Models.User", b =>
@@ -398,10 +360,6 @@ namespace SportsCentre.API.Migrations
 
             modelBuilder.Entity("SportsCentre.API.Models.Booking", b =>
                 {
-                    b.HasOne("SportsCentre.API.Models.Class")
-                        .WithMany("Bookings")
-                        .HasForeignKey("ClassId");
-
                     b.HasOne("SportsCentre.API.Models.Club")
                         .WithMany("Bookings")
                         .HasForeignKey("ClubId");
@@ -413,9 +371,9 @@ namespace SportsCentre.API.Migrations
 
             modelBuilder.Entity("SportsCentre.API.Models.Class", b =>
                 {
-                    b.HasOne("SportsCentre.API.Models.Staff", "Attendant")
+                    b.HasOne("SportsCentre.API.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("AttendantId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("SportsCentre.API.Models.Item", b =>

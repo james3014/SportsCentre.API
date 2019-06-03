@@ -11,7 +11,7 @@ namespace SportsCentre.API.Dtos
         public string ClassName { get; set; }
         public DateTime ClassDate { get; set; }
         public string ClassTime { get; set; }
-        public string AttendantEmail { get; set; }
+        public string AttendantUserName { get; set; }
         public double Cost { get; set; }
         public int MaxAttendees { get; set; }
         public string Facility { get; set; }

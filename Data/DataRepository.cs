@@ -68,7 +68,7 @@ namespace SportsCentre.API.Data
 
         public async Task<IEnumerable<Class>> GetStaffClasses(User staffFromRepo)
         {
-            var selectedStaffClasses = await context.Classes.Where(s => s.Attendant.Id == staffFromRepo.Id).ToListAsync();
+            var selectedStaffClasses = await context.Classes.Where(s => s.User.Id == staffFromRepo.Id).ToListAsync();
 
             context.RemoveRange(selectedStaffClasses);
             await context.SaveChangesAsync();

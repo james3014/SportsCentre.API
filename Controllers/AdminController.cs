@@ -84,7 +84,7 @@ namespace SportsCentre.API.Controllers
         [HttpPost("classes/create")]
         public async Task<IActionResult> CreateNewClass(CreateClassDto createClassDto)
         {
-            var staff = await repo.GetStaffFromEmail(createClassDto.AttendantEmail);
+            var staff = await repo.GetStaffFromUserName(createClassDto.AttendantUserName);
 
             if (staff == null) return null;
 
@@ -150,7 +150,7 @@ namespace SportsCentre.API.Controllers
                 Facility = createClassDto.Facility,
                 MaxAttendees = createClassDto.MaxAttendees,
                 TotalAttendees = 0,
-                Attendant = staff,
+                User = staff,
                 Cost = createClassDto.Cost
             };
 
@@ -167,7 +167,7 @@ namespace SportsCentre.API.Controllers
 
             if (classFromRepo == null) return BadRequest("No Class Found");
 
-            var staff = await repo.GetStaffFromEmail(createClassDto.AttendantEmail);
+            var staff = await repo.GetStaffFromUserName(createClassDto.AttendantUserName);
 
             if (staff == null) return null;
 

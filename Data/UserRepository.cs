@@ -22,7 +22,7 @@ namespace SportsCentre.API.Data
 
         public async Task<IEnumerable<User>> GetAttendants()
         {
-            var attendants = await userManager.GetUsersInRoleAsync("Attendants");
+            var attendants = await userManager.GetUsersInRoleAsync("Attendant");
 
             return attendants;
         }

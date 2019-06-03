@@ -8,7 +8,7 @@ namespace SportsCentre.API.Data
     {
         Task<Class> GetClass(int id);
         Task<Class> CreateNewClass(Class newClass);
-        Task<User> GetStaffFromEmail(string email);
+        Task<User> GetStaffFromUserName(string email);
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveAll();
     }

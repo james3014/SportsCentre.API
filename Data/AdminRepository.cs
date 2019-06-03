@@ -30,9 +30,9 @@ namespace SportsCentre.API.Data
             return newClass;
         }
 
-        public async Task<User> GetStaffFromEmail(string email)
+        public async Task<User> GetStaffFromUserName(string userName)
         {
-            var staff = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var staff = await context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
 
             return staff;
         }

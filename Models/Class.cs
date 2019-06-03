@@ -11,8 +11,7 @@ namespace SportsCentre.API.Models
         public string Facility { get; set; }
         public int MaxAttendees { get; set; }
         public int TotalAttendees { get; set; }
-        public User Attendant { get; set; }
-        public Booking[] Bookings { get; set; }
+        public User User { get; set; }
         public double Cost { get; set; }
     }
 }
