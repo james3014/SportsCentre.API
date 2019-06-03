@@ -1,11 +1,15 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SportsCentre.API.Data;
 using SportsCentre.API.Dtos;
 using SportsCentre.API.Models;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace SportsCentre.API.Controllers
 {
@@ -13,18 +17,73 @@ namespace SportsCentre.API.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
+        private readonly DataContext context;
         private readonly IAdminRepository repo;
         private readonly IDataRepository dataRepo;
         private readonly IMapper mapper;
+        private readonly UserManager<User> userManager;
 
-        public AdminController(IAdminRepository repo, IDataRepository dataRepo, IMapper mapper)
+        public AdminController(DataContext context, IAdminRepository repo, IDataRepository dataRepo,
+            IMapper mapper, UserManager<User> userManager)
         {
+            this.context = context;
             this.repo = repo;
             this.dataRepo = dataRepo;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
 
 
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpGet("userswithroles")]
+        public async Task<IActionResult> GetUsersWithRoles()
+        {
+            var userList = await (from user in context.Users
+                                  orderby user.UserName
+                                  select new
+                                  {
+                                      Id = user.Id,
+                                      UserName = user.UserName,
+                                      Roles = (from userRole in user.UserRoles
+                                               join role in context.Roles
+                                               on userRole.RoleId
+                                               equals role.Id
+                                               select role.Name).ToList()
+                                  }).ToListAsync();
+
+            return Ok(userList);
+        }
+
+
+
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpPost("editroles/{userName}")]
+        public async Task<IActionResult> EditRoles(string userName, RoleEditDto roleEditDto)
+        {
+            var user = await userManager.FindByNameAsync(userName);
+
+            var userRoles = await userManager.GetRolesAsync(user);
+
+            var selectedRoles = roleEditDto.RoleNames;
+
+            selectedRoles = selectedRoles ?? new string[] { };
+
+            var result = await userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
+
+            if (!result.Succeeded) return BadRequest("Failed to add to roles");
+
+            result = await userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles));
+
+            if (!result.Succeeded) return BadRequest("Failed to remove from roles");
+
+            return Ok(await userManager.GetRolesAsync(user));
+        }
+    
+
+
+
+
+        [Authorize(Policy ="RequireAdminRole")]
         [HttpPost("classes/create")]
         public async Task<IActionResult> CreateNewClass(CreateClassDto createClassDto)
         {
@@ -102,8 +161,10 @@ namespace SportsCentre.API.Controllers
 
             return Ok(createdClass);
         }
+        
 
 
+        [Authorize(Policy = "RequireAdminRole")]
         [HttpPut("classes/update/{id}")]
         public async Task<IActionResult> EditClass(int id, CreateClassDto createClassDto)
         {
@@ -179,6 +240,7 @@ namespace SportsCentre.API.Controllers
         }
 
 
+        [Authorize(Policy = "RequireAdminRole")]
         [HttpDelete("classes/delete{id}")]
         public async Task<IActionResult> RemoveClass(int id)
         {

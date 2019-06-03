@@ -10,5 +10,6 @@ namespace SportsCentre.API.Data
     {
         Task<IEnumerable<Staff>> GetStaff();
         Task<IEnumerable<Staff>> GetAttendants();
+        Task<User> GetUser(int id);
     }
 }

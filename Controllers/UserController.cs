@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using SportsCentre.API.Data;
+using SportsCentre.API.Dtos;
 using SportsCentre.API.Models;
 
 namespace SportsCentre.API.Controllers
@@ -17,12 +19,14 @@ namespace SportsCentre.API.Controllers
         // Private variables
         private readonly IUserRepository repo;
         private readonly IAuthRepository authRepo;
+        private readonly IMapper mapper;
 
         // Constructor
-        public UserController(IUserRepository repo, IAuthRepository authRepo)
+        public UserController(IUserRepository repo, IAuthRepository authRepo, IMapper mapper)
         {
             this.repo = repo;
             this.authRepo = authRepo;
+            this.mapper = mapper;
         }
 
         [HttpGet("attendants")]
@@ -39,6 +43,18 @@ namespace SportsCentre.API.Controllers
             var allStaff = await repo.GetStaff();
 
             return Ok(allStaff);
+        }
+
+        [HttpGet("{id}", Name = "GetUser")]
+        public async Task<IActionResult> GetUser(int id)
+        {
+            var isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == id;
+
+            var user = await repo.GetUser(id);
+
+            var userToReturn = mapper.Map<UserForDetailedDto>(user);
+
+            return Ok(userToReturn);
         }
 
     }

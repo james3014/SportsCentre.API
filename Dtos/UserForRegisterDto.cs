@@ -5,6 +5,9 @@ namespace SportsCentre.API.Dtos
 {
     public class UserForRegisterDto
     {
+        [Required(ErrorMessage = "Username Required")]
+        public string Username { get; set; }
+
         [Required]
         [EmailAddress(ErrorMessage = "Email Provided Is Not Valid")]
         public string Email { get; set; }

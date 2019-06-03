@@ -33,6 +33,15 @@ namespace SportsCentre.API.Data
 
             return staff;
         }
+
+        public async Task<User> GetUser(int id)
+        {
+            var query = context.Users.AsQueryable();
+
+            var user = await query.FirstOrDefaultAsync(u => u.Id == id);
+
+            return user;
+        }
     }
 
 

@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SportsCentre.API.Data;
@@ -13,6 +17,7 @@ using SportsCentre.API.Models;
 
 namespace SportsCentre.API.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -22,16 +27,20 @@ namespace SportsCentre.API.Controllers
         private readonly IConfiguration config;
         private readonly IMapper mapper;
         private readonly IDataRepository dataRepo;
-
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
 
 
 
         // Constructor
-        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper, IDataRepository dataRepo)
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper,
+            IDataRepository dataRepo, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this.config = config;
             this.mapper = mapper;
             this.dataRepo = dataRepo;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
             this.repo = repo;
         }
 
@@ -40,26 +49,22 @@ namespace SportsCentre.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
-            userForRegisterDto.Email = userForRegisterDto.Email.ToLower();
+            var userToCreate = mapper.Map<User>(userForRegisterDto);
 
-            if (await repo.UserExists(userForRegisterDto.Email)) return BadRequest("Email Already In Use");
+            var result = await userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
 
-            User newUser = new User
+            var userToReturn = mapper.Map <UserForDetailedDto>(userToCreate);
+
+            if (result.Succeeded)
             {
-                Email = userForRegisterDto.Email,
-                FirstName = userForRegisterDto.FirstName,
-                Surname = userForRegisterDto.Surname,
-                AddressLine1 = userForRegisterDto.AddressLine1,
-                AddressLine2 = userForRegisterDto.AddressLine2,
-                Town = userForRegisterDto.Town,
-                PostCode = userForRegisterDto.PostCode,
-                DateOfBirth = userForRegisterDto.DateOfBirth
-            };
+                return CreatedAtRoute("GetUser", new { controller = "User", id = userToCreate.Id }, userToReturn);
+            }
 
-            User createdUser = await repo.Register(newUser, userForRegisterDto.Password);
-
-            return StatusCode(200);
+            return BadRequest(result.Errors);
         }
+
+
+
 
         [HttpPost("staff/create")]
         public async Task<IActionResult> CreateStaff(StaffForRegisterDto staffForRegisterDto)
@@ -86,6 +91,9 @@ namespace SportsCentre.API.Controllers
             return StatusCode(200);
         }
 
+
+
+
         [HttpPut("staff/update/{id}")]
         public async Task<IActionResult> UpdateStaff(int id, StaffForRegisterDto staffForRegisterDto)
         {
@@ -108,6 +116,8 @@ namespace SportsCentre.API.Controllers
 
         }
 
+
+
         [HttpDelete("staff/delete/{id}")]
         public async Task<IActionResult> DeleteStaff(int id)
         {
@@ -128,25 +138,46 @@ namespace SportsCentre.API.Controllers
         }
 
 
-        /**
-            This route takes in a JSON "UserForLoginDto" which provides an email and password.
-            If this is not null then a new claim is created which will provide our JWT with an
-            ID and email address. A key is provided from appsettings.json and this is used as 
-            part of the credentials. Finally a token is generated with an expiry date as well
-            as the claims and credentials.
-         */
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userforLoginDto)
         {
-            User userFromRepo = await repo.Login(userforLoginDto.Email, userforLoginDto.Password);
+            var user = await userManager.FindByNameAsync(userforLoginDto.UserName);
 
-            if (userFromRepo == null) return Unauthorized();
+            var result = await signInManager.CheckPasswordSignInAsync(user, userforLoginDto.Password, false);
 
-            var claims = new[]
+            if (result.Succeeded)
             {
-                new Claim(ClaimTypes.Email, userFromRepo.Email),
-                new Claim(ClaimTypes.Name, userFromRepo.FirstName)
+                var appUser = await userManager.Users.FirstOrDefaultAsync(u => u.NormalizedUserName== userforLoginDto.UserName.ToUpper());
+
+                var userToReturn = mapper.Map<CurrentUserDto>(user);
+
+                return Ok(new
+                {
+                    token = GenerateJwtToken(appUser).Result,
+                    user = userToReturn
+                });
+            }
+
+            return Unauthorized();
+        }
+
+
+
+        private async Task<string> GenerateJwtToken(User user)
+        {
+            var claims = new List<Claim>
+{
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
+
+            var roles = await userManager.GetRolesAsync(user);
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("AppSettings:Token").Value));
 
@@ -163,14 +194,12 @@ namespace SportsCentre.API.Controllers
 
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-            var user = mapper.Map<CurrentUserDto>(userFromRepo);
-
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token),
-                user
-            });
+            return tokenHandler.WriteToken(token);
         }
+
+
+
+
 
         [HttpPost("staff")]
         public async Task<IActionResult> StaffLogin(StaffForLoginDto staffForLoginDto)

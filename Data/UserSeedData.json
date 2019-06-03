@@ -1,0 +1,54 @@
+[
+  {
+    "UserName": "sheldon",
+    "Email": "sheldon@email.com",
+    "Password": "password",
+    "FirstName": "Sheldon",
+    "Surname": "Cooper",
+    "AddressLine1": "1 Main Street",
+    "AddressLine2": "Glasgow",
+    "Town": "Uddingston",
+    "PostCode": "G72 7JG",
+    "DateOfBirth": "1989-10-19",
+    "DateJoined": "2019-04-28"
+  },
+  {
+    "UserName": "leonard",
+    "Email": "leonard@email.com",
+    "Password": "password",
+    "FirstName": "Leonard",
+    "Surname": "Hofstadter",
+    "AddressLine1": "1 High Street",
+    "AddressLine2": "Glasgow",
+    "Town": "Uddingston",
+    "PostCode": "G72 7JG",
+    "DateOfBirth": "1990-01-25",
+    "DateJoined": "2019-04-28"
+  },
+  {
+    "UserName": "howard",
+    "Email": "howard@email.com",
+    "Password": "password",
+    "FirstName": "Howard",
+    "Surname": "Wolowitz",
+    "AddressLine1": "1 Low Street",
+    "AddressLine2": "Glasgow",
+    "Town": "Uddingston",
+    "PostCode": "G72 7JG",
+    "DateOfBirth": "1987-04-25",
+    "DateJoined": "2019-04-28"
+  },
+  {
+    "UserName": "raj",
+    "Email": "raj@email.com",
+    "Password": "password",
+    "FirstName": "Rajesh",
+    "Surname": "koothrappali",
+    "AddressLine1": "1 Other Street",
+    "AddressLine2": "Glasgow",
+    "Town": "Uddingston",
+    "PostCode": "G72 7JG",
+    "DateOfBirth": "1988-05-22",
+    "DateJoined": "2019-04-28"
+  }
+]
