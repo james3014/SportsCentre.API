@@ -187,7 +187,7 @@ namespace SportsCentre.API.Controllers
 
             if (selectedClass == null)
             {
-                return null;
+                return BadRequest("Class Not Found");
             }
             else
             {
@@ -196,7 +196,7 @@ namespace SportsCentre.API.Controllers
            
             User user = await repo.GetUserFromEmail(classBookingDto.Email);
 
-            if (user == null) return null;
+            if (user == null) return BadRequest("Email Not Registered");
 
             Booking newbooking = new Booking
             {
@@ -231,11 +231,13 @@ namespace SportsCentre.API.Controllers
         [HttpPost("bookings/facility")]
         public async Task<IActionResult> CreateNewBooking(BookingDto bookingDto)
         {
+            DateTime bookingLimit = DateTime.Now.AddDays(8);
+
             User user = await repo.GetUserFromEmail(bookingDto.Email);
 
             var allCurrentBookings = await repo.GetBookings();
 
-            if (user == null) return null;
+            if (user == null) BadRequest("Email Not Registered");
 
             switch (bookingDto.Facility)
             {
@@ -291,7 +293,11 @@ namespace SportsCentre.API.Controllers
 
             }
 
-            if (bookingDto.Facility == "Full Hall")
+            if (bookingDto.BookingDate > bookingLimit)
+            {
+                return BadRequest("Bookings cannot be made more than 8 days in advance");
+            }
+            else if (bookingDto.Facility == "Full Hall")
             {
                 foreach (var item in allCurrentBookings)
                 {
@@ -328,7 +334,14 @@ namespace SportsCentre.API.Controllers
         {
             User user = await repo.GetUserFromEmail(functionBookingDto.Email);
 
-            if (user == null) return null;
+            if (user == null) BadRequest("Email Address Not Registered");
+
+            DateTime bookingLimit = DateTime.Now.AddDays(30);
+
+            if (functionBookingDto.BookingDate > bookingLimit)
+            {
+                return BadRequest("Bookings cannot be made more than 30 days in advance");
+            }
 
             Booking newbooking = new Booking
             {

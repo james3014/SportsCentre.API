@@ -101,7 +101,11 @@ namespace SportsCentre.API.Controllers
         {
             var staff = await repo.GetStaffFromUserName(createClassDto.AttendantUserName);
 
-            if (staff == null) return null;
+            if (staff == null) BadRequest("Staff Member Not Found");
+
+            var allCurrentBookings = await repo.GetBookings();
+
+            var allCurrentClasses = await repo.GetClasses();
 
             switch (createClassDto.Facility)
             {
@@ -155,6 +159,28 @@ namespace SportsCentre.API.Controllers
                     createClassDto.ClassTime = "19:00 - 20:00";
                     break;
 
+            }
+
+            if (createClassDto.Facility == "Full Hall")
+            {
+                foreach (var item in allCurrentBookings)
+                {
+                    if (item.BookingDate.ToShortDateString().Equals(createClassDto.ClassDate.ToShortDateString()) && item.BookingTime.Equals(createClassDto.ClassTime))
+                    {
+                        return BadRequest("Time Slot Taken");
+                    }
+                }
+            }
+
+            if (createClassDto.Facility == "Full Hall")
+            {
+                foreach (var item in allCurrentClasses)
+                {
+                    if (item.ClassDate.ToShortDateString().Equals(createClassDto.ClassDate.ToShortDateString()) && item.ClassTime.Equals(createClassDto.ClassTime))
+                    {
+                        return BadRequest("Time Slot Booked");
+                    }
+                }
             }
 
             Class newClass = new Class

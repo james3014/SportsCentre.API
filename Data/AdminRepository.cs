@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SportsCentre.API.Models;
@@ -21,6 +22,28 @@ namespace SportsCentre.API.Data
             var returnedClass = await context.Classes.FirstOrDefaultAsync(c => c.Id == id);
 
             return returnedClass;
+        }
+
+
+        /*
+        * This function is used to retrieve all current classes from the database.
+        * These are then passed as a list object back to the controller.
+        */
+        public async Task<IEnumerable<Class>> GetClasses()
+        {
+            var currentClasses = await context.Classes.ToListAsync();
+
+            return currentClasses;
+        }
+
+        /*
+         * This function uses context to retrieve all current bookings from the database.
+        */
+        public async Task<IEnumerable<Booking>> GetBookings()
+        {
+            var bookings = await context.Bookings.ToListAsync();
+
+            return bookings;
         }
 
         /* This function is used to create a new class inside the database.
